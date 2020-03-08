@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Button, Tag } from 'antd';
 import Sortable from 'react-sortablejs';
 import _ from 'loadsh';
+import classNames from 'classnames';
 import { indexToArray, UpdateItem, isPathorCom, getDragItem, itemAdd, itemRemove, findItemObject } from '../utils/utils';
+import styles from './home.less'
 
 const GlobalComponent = {
   Button,
@@ -95,6 +97,7 @@ const componetList = [
 class Home extends Component {
   state = {
     viewData: [],
+    ComListHidden: false,
   };
 
   componentDidMount() {
@@ -198,23 +201,59 @@ class Home extends Component {
     });
   };
 
+  toggleComponentList = () => {
+    const { ComListHidden } = this.state;
+    this.setState({
+      ComListHidden: !ComListHidden
+    })
+  }
+
   render() {
+
+    var cls = classNames(styles.ComponentList, {
+      [styles.hidden]: this.state.ComListHidden === true,
+    })
+
     return (
-      <>
-        <div id="items">
-          <Sortable options={comOption}>{this.renderComp(componetList)}</Sortable>
-          --------
+      <div className={styles.container}>
+        <div className={styles.LeftContainer}>
+          <div className={styles.header}>
+            <div className={styles.btnList}>
+              <div className={styles.btn}>预览</div>
+              <div className={styles.btn}>保存</div>
+              <div className={styles.btn}>全屏</div>
+            </div>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.settings}>
+              <span onClick={this.toggleComponentList}>btn</span>
+            </div>
+            <div
+              className={styles.editRegion}
+            >
+              <div className={cls}>
+                <Sortable options={comOption}>{this.renderComp(componetList)}</Sortable>
+              </div>
+              <div className={styles.dragRegion}>
+                <Sortable options={
+                  { ...sortableOption,
+                    onAdd: evt => this.onAddItem(evt),
+                    onUpdate: evt => this.onUpdate(evt),
+                  }}
+                  key={_.uniqueId()}>
+                    {this.renderView(this.state.viewData, '')}
+                </Sortable>
+              </div>
+          </div>
+          </div>
+          <div className={styles.footer}>
+            底部
+          </div>
         </div>
-        <div
-          id="container"
-          style={{ border: '1px dotted gray', minHeight: '400px', padding: '20px' }}
-        >
-          <Sortable options={{ ...sortableOption, onAdd: evt => this.onAddItem(evt),                 onUpdate: evt => this.onUpdate(evt),
- }} key={_.uniqueId()}>
-            {this.renderView(this.state.viewData, '')}
-          </Sortable>
+        <div className={styles.RightContainer}>
+          right
         </div>
-      </>
+      </div>
     );
   }
 }
