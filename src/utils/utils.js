@@ -133,7 +133,7 @@ export const UpdateItem = (newIndex, oldIndex, data, parentPath) => {
  */
 export const findItemObject = (componetList, name) => {
   const componentItem = componetList.filter(item => {
-    if (item.name === name) {
+    if (item.type === name) {
       return true;
     } else {
       return false;
