@@ -254,7 +254,8 @@ class Home extends Component {
       }
       const Comp = GlobalComponent[item.name];
       const props = {
-        'data-id': indexs
+        'data-id': indexs,
+        'type': item.props.type
       }
       if(item.needDiv == true) {
         return <div data-id={indexs}><Comp>{item.text}</Comp></div>;
