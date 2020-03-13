@@ -111,12 +111,15 @@ export const UpdateItem = (newIndex, oldIndex, data, parentPath) => {
     parentArr.forEach((item, index) => {
       parent = parent.children[item];
     })
-    swap(newIndex, oldIndex, parent);
+    swap(newIndex, oldIndex, parent.children);
   } else {
-    if(first) {
+    // 第一层
+    if(!isNaN(first)) {
+      // 有一层父级元素，first不为NaN
       parent = data[first];
       swap(newIndex, oldIndex, parent.children);
     } else {
+      // 最外层 parentArr为null，first为NaN
       parent = data;
       swap(newIndex, oldIndex, parent);
     }
@@ -137,4 +140,29 @@ export const findItemObject = (componetList, name) => {
     }
   });
   return componentItem[0];
+}
+
+/**
+ * @description 更新item信息
+ * @param {*} newIndex 原index
+ * @param {*} data data
+ * @param {*} dragItem 点击的item
+ */
+export const itemUpdateInfo = (newIndex, data, dragItem) => {
+  let newindexarr = indexToArray(newIndex);
+  const first = newindexarr.shift();
+  let parent = data;
+  if(newindexarr.length > 0) {
+    parent = parent[first];
+    newindexarr.forEach((item, index) => {
+      if(index === newindexarr.length -1 ) {
+        parent.children.splice(item, 1, dragItem);
+      } else {
+        parent = parent.children[item];
+      }
+    })
+  } else {
+    parent.splice(first, 1, dragItem);
+  }
+  return data;
 }

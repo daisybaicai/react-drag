@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Tag } from 'antd';
+import { Button, Tag, NavBar, Icon, InputItem, SearchBar, Result } from 'antd-mobile';
 import Sortable from 'react-sortablejs';
 import _ from 'loadsh';
 import classNames from 'classnames';
-import { indexToArray, UpdateItem, isPathorCom, getDragItem, itemAdd, itemRemove, findItemObject } from '../utils/utils';
+import { indexToArray, UpdateItem, isPathorCom, getDragItem, itemAdd, itemRemove, findItemObject, itemUpdateInfo } from '../utils/utils';
 import styles from './home.less'
 
 const GlobalComponent = {
   Button,
   Tag,
+  NavBar,
+  Icon,
+  InputItem,
+  SearchBar,
+  Result
 };
 
 const comOption = {
@@ -34,6 +39,9 @@ const comData = [
     name: 'Button',
     nested: false,
     attr: {},
+    props: {
+      type: 'dashed'
+    },
     text: 'btn',
   },
   {
@@ -44,6 +52,7 @@ const comData = [
         border: '1px solid red',
       },
     },
+    children: []
   },
   {
     name: 'div',
@@ -76,12 +85,17 @@ const componetList = [
     nested: false,
     attr: {},
     text: 'btn',
+    props: {
+      type: 'dashed'
+    },
+    needDiv: false,
   },
   {
     name: 'Tag',
     nested: false,
     attr: {},
     text: 'tag',
+    needDiv: false,
   },
   {
     name: 'div',
@@ -89,15 +103,47 @@ const componetList = [
     attr: {
       style: {
         border: '1px solid black',
+        height: '100px',
+        width: '',
       },
     },
     children: []
   },
+  {
+    name: 'NavBar',
+    nested: false,
+    attr: {},
+    text: '导航',
+    needDiv: false,
+  },
+  {
+    name: 'InputItem',
+    nested: false,
+    attr: {},
+    text: '标题',
+    needDiv: true,
+  },
+  {
+    name: 'SearchBar',
+    nested: false,
+    attr: {},
+    text: '',
+    needDiv: true
+  },
+  {
+    name: 'Result',
+    nested: false,
+    attr: {},
+    text: ''
+  }
 ];
 class Home extends Component {
   state = {
     viewData: [],
     ComListHidden: false,
+    info: {},
+    dragItem: {},
+    arrIndex: ''
   };
 
   componentDidMount() {
@@ -112,7 +158,6 @@ class Home extends Component {
     const { newIndex, oldIndex } = evt;
     // 父节点路径
     const parentPath = evt.path[1].getAttribute('data-id');
-
     const oldData = _.cloneDeep(this.state.viewData);
     const newData = UpdateItem(newIndex, oldIndex, oldData, parentPath);
     this.setState({
@@ -125,7 +170,7 @@ class Home extends Component {
     const comNameOrPath = evt.clone.dataset.id; // (1)得到拖拽元素或者路径
     const parentPath = evt.path[1].getAttribute('data-id');
     const newIndex = parentPath ? `${parentPath}-${startIndex}` : startIndex;
-    const oldData = _.cloneDeep(this.state.viewData); 
+    const oldData = _.cloneDeep(this.state.viewData);
     if(isPathorCom(comNameOrPath)) {
       // 跨级拖拽, 需要考虑先删除元素还是先添加元素
       const oldIndex = comNameOrPath;
@@ -155,6 +200,21 @@ class Home extends Component {
   }
 
 
+  onChoose = (evt) => {
+    let parent = evt.target;
+    while(parent.getAttribute('data-id') == null) {
+      parent = parent.parentNode;
+    }
+    const arrIndex = evt.target.getAttribute('data-id') || parent.getAttribute('data-id');
+    const dragItem = getDragItem(arrIndex,_.clone(this.state.viewData));
+    console.log('drag', dragItem);
+    const info = {};
+    info.text = dragItem.text;
+    this.setState({
+      info, dragItem, arrIndex
+    })
+  }
+
   renderComp(data) {
     return data.map(item => {
       return (
@@ -169,15 +229,11 @@ class Home extends Component {
     return data.map((item, i) => {
       // index
       const indexs = index === '' ? String(i) : `${index}-${i}`;
-      // 将嵌套的没有子元素的都加上children属性
-      if (item.nested && !item.children) {
-        item.children = [];
-      }
       // 渲染，有子元素的嵌套的
       if (item.children) {
         let { attr: style = {} } = item;
         return (
-          <div style={style.style} className="sortable-nested" data-id={indexs} key={_.uniqueId()}>
+          <div style={style.style} className="sortable-nested" data-id={indexs} key={_.uniqueId()} props={item.props} >
             <Sortable
               style={{
                 minHeight: 50,
@@ -197,7 +253,14 @@ class Home extends Component {
         );
       }
       const Comp = GlobalComponent[item.name];
-      return <Comp data-id={indexs}>{item.text}</Comp>;
+      const props = {
+        'data-id': indexs
+      }
+      if(item.needDiv == true) {
+        return <div data-id={indexs}><Comp>{item.text}</Comp></div>;
+      } else {
+        return React.createElement(Comp, props, item.text ? item.text : null)
+      }
     });
   };
 
@@ -207,6 +270,33 @@ class Home extends Component {
       ComListHidden: !ComListHidden
     })
   }
+
+  handleChange = (e) => {
+    const key = e.target.getAttribute('data-id');
+    const { info, dragItem, arrIndex } = this.state;
+    info[key] = e.target.value;
+    this.setState({
+      info
+    })
+    dragItem.text = info.text;
+    const newdata = itemUpdateInfo(arrIndex, _.clone(this.state.viewData), dragItem);
+    this.setState({
+      viewData: newdata
+    })
+  }
+
+  // comrender = ()  => {
+  //   const item = {
+  //     name: 'searbar',
+  //     props: {
+  //       // placeholder: 'hah',
+  //       'data-id': 'title',
+  //     },
+  //     text: 'ss'
+  //   }
+  //   const com = GlobalComponent['Button'];
+  //   return React.createElement(com, item.props, item.text ? item.text : null)
+  // }
 
   render() {
 
@@ -235,14 +325,17 @@ class Home extends Component {
                 <Sortable options={comOption}>{this.renderComp(componetList)}</Sortable>
               </div>
               <div className={styles.dragRegion}>
-                <Sortable options={
-                  { ...sortableOption,
-                    onAdd: evt => this.onAddItem(evt),
-                    onUpdate: evt => this.onUpdate(evt),
-                  }}
-                  key={_.uniqueId()}>
-                    {this.renderView(this.state.viewData, '')}
-                </Sortable>
+                <div style={{ width: '375px', height: '667px', backgroundColor: 'white', margin: '20px'}}>
+                  <Sortable options={
+                    { ...sortableOption,
+                      onAdd: evt => this.onAddItem(evt),
+                      onUpdate: evt => this.onUpdate(evt),
+                    }}
+                    onClick={(evt) => this.onChoose(evt)}
+                    key={_.uniqueId()}>
+                      {this.renderView(this.state.viewData, '')}
+                  </Sortable>
+                </div>
               </div>
           </div>
           </div>
@@ -251,7 +344,13 @@ class Home extends Component {
           </div>
         </div>
         <div className={styles.RightContainer}>
-          right
+          <div>
+          属性编辑区  
+          </div>
+          text: <input data-id="text" value={this.state.info.text} onChange={this.handleChange}/>
+          font-size: <input value={this.state.info.fontSize}/>
+          width: <input value={this.state.info.width}/>
+          height: <input value={this.state.info.height}/>
         </div>
       </div>
     );

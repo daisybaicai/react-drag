@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "antd": "^3.19.5",
+    "antd-mobile": "^2.3.1",
+    "classnames": "~2.2.6",
     "dva": "^2.6.0-beta.6",
     "install": "^0.13.0",
     "loadsh": "0.0.4",
@@ -18,7 +20,6 @@
     "react-dom": "^16.8.6",
     "react-sortablejs": "^1.5.1",
     "sortablejs": "^1.10.2",
-    "classnames": "~2.2.6",
     "watch-props": "0.0.3"
   },
   "devDependencies": {
