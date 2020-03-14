@@ -5,22 +5,40 @@ export default {
 	nested: false,
 	props: {
 		content: '标题',
-		// style: {
-		//     margin: "0px 10px 0px 0px"
-		// }
 	},
-	config: {
-		type: {
-				text: "主题",
-				enum: [
-						'primary',
-						'default',
-						'dashed',
-						'danger'
+	config: [
+		{
+			text: '文字内容',
+			children:[{
+				type: 'string',
+				text: '内容',
+				field: 'content' // props.content
+			},{
+				type: 'string',
+				text: '用户提示',
+				field: 'placeholder'
+			},{
+				type: 'array',
+				text: '输入类型',
+				field: 'type',
+				data: [
+					'bankCard',
+					'string',
+					'phone',
+					'password',
+					'number',
 				]
-		},
-		content: {
-				text: '文案',
-		},
-	},
+			},{
+                type: 'array',
+                text: '是否禁用',
+                field: 'disabled',
+                data: ['true',false]
+            },{
+				type: 'array',
+                text: '是否可清除',
+                field: 'clear',
+                data: ['true',false]
+			}]
+		}
+	],
 }

@@ -16,7 +16,7 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: { webpackChunkName: true },
-      title: 'antd-react',
+      title: '前端可视化-reactDrag',
       dll: false,
       
       routes: {

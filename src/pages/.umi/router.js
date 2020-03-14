@@ -25,8 +25,8 @@ const routes = [
             })
           : require('../index').default,
         exact: true,
-        _title: 'antd-react',
-        _title_default: 'antd-react',
+        _title: '前端可视化-reactDrag',
+        _title_default: '前端可视化-reactDrag',
       },
       {
         component: () =>
@@ -35,12 +35,12 @@ const routes = [
               .default,
             { pagesPath: 'src/pages', hasRoutesInConfig: true },
           ),
-        _title: 'antd-react',
-        _title_default: 'antd-react',
+        _title: '前端可视化-reactDrag',
+        _title_default: '前端可视化-reactDrag',
       },
     ],
-    _title: 'antd-react',
-    _title_default: 'antd-react',
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
   },
   {
     component: () =>
@@ -49,8 +49,8 @@ const routes = [
           .default,
         { pagesPath: 'src/pages', hasRoutesInConfig: true },
       ),
-    _title: 'antd-react',
-    _title_default: 'antd-react',
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
   },
 ];
 window.g_routes = routes;
