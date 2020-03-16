@@ -22,7 +22,14 @@ export default {
                     text: '主题颜色',
                     field: 'mode',
                     data: [
-                        'dark', 'light'
+                        {
+                            text: '深色',
+                            value: 'dark'
+                        },
+                        {
+                            text: '亮色',
+                            value: 'light',
+                        }
                     ]
                 },
                 {
@@ -35,18 +42,6 @@ export default {
                     text: '右侧内容',
                     field: 'rightContent' // props.content
                 },
-                // {
-                //     type: 'array',
-                //     text: '左侧icon',
-                //     field: 'icon',
-                //     data: [
-                //         'check-circle', 'check', 'check-circle-o',
-                //         'cross-circle', 'cross', 'cross-circle-o',
-                //         'up', 'down', 'left',
-                //         'right', 'ellipsis',
-                //         'loading', false
-                //     ] 
-                // }
             ]
         }
 	],

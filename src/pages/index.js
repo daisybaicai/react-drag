@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { indexToArray, UpdateItem, isPathorCom, getDragItem, itemAdd, itemRemove, findItemObject, itemUpdateInfo } from '../utils/utils';
 import styles from './home.less'
 import componetList from './config';
+import Color from './picker';
 
 const GlobalComponent = {
   Button,
@@ -56,7 +57,10 @@ class Home extends Component {
     info: {},
     dragItem: {},
     arrIndex: '',
-    info2: []
+    info2: [],
+    reactNodeInfo: {},
+    reactNodeConfig: [],
+    color: '#6b3232'
   };
 
   componentDidMount() {
@@ -113,6 +117,9 @@ class Home extends Component {
   }
 
 
+  /**
+   * @description 点击时把config，info等属性保存到state里。
+   */
   onChoose = (evt) => {
     let parent = evt.target;
     while(parent.getAttribute('data-id') == null) {
@@ -120,13 +127,14 @@ class Home extends Component {
     }
     const arrIndex = evt.target.getAttribute('data-id') || parent.getAttribute('data-id');
     const dragItem = getDragItem(arrIndex,_.clone(this.state.viewData));
-    console.log('drag', dragItem);
-    let info = {};
+    let info = {} , reactNodeInfo = {};
     info = dragItem.props;
+    reactNodeInfo = dragItem.nodeProps;
     const componetFromList = findItemObject(componetList, dragItem.type);
     const config  =  componetFromList.config;
+    const reactNodeConfig = componetFromList.reactNodeConfig;
     this.setState({
-      info, dragItem, arrIndex, info2: config
+      info, dragItem, arrIndex, info2: config, reactNodeInfo, reactNodeConfig
     })
   }
 
@@ -172,9 +180,20 @@ class Home extends Component {
         );
       }
       const Comp = GlobalComponent[item.type];
+      // 具有特殊属性(ReactNode)
+      let ReactNodeProps = {};
+      if(item.nodeProps) {
+        const nodeProps = item.nodeProps;
+        for(const key in nodeProps) {
+          const func = nodeProps[key].renderFunc;
+          const params = nodeProps[key].params;
+          ReactNodeProps[key] = func(params);
+        }
+      }
       const props = {
         'data-id': indexs,
-        ...item.props
+        ...item.props,
+        ...ReactNodeProps
       }
       if(item.needDiv == true) {
         return <div data-id={indexs} style={{ border: '1px dashed blue'}}>{React.createElement(Comp, props, item.props.content ? item.props.content : null)}</div>;
@@ -198,18 +217,17 @@ class Home extends Component {
    * @description 配置项的渲染组件
    * @param {*} data 该配置项的数据结构
    */
-  renderConfig = (data) => {
-    if(JSON.stringify(data) !== '[]') {
+  renderConfig = (data, type) => {
+    if(JSON.stringify(data) !== '[]' && data) {
       return data.map((item) => {
         return (
           <div>
             <div><h3>{item.text}</h3></div>
             <div>{
               item.children.map(item => {
-                console.log('chidlren', item);
                 return (
                   <div>
-                    {this.renderValue(item)}
+                    {this.renderValue(item, type)}
                   </div>
                 )
               })
@@ -221,7 +239,7 @@ class Home extends Component {
   }
 
   /**
-   * @description 改变input配置项触发的函数
+   * @description 改变input配置项触发的函数(props)
    * @param {e} e event触发得到的e
    * @param {string} key 所对应到的属性名称 e.g:props.content -> content
    */
@@ -251,24 +269,77 @@ class Home extends Component {
     })
   }
 
-  renderValue = ({text: title, field: value, type, data}) => {
-    let valueInfo = this.state.info;
-    if(value.indexOf('.') != -1) {
-      const valuearr = value.split('.');
-      valuearr.map((item, index) => {
-        if(index == valuearr.length -1) {
-          valueInfo = valueInfo[item];
-        } else {
-          valueInfo = valueInfo[item];
-        }
-      })
+  /**
+   * @description 改变input配置项触发的函数(nodeProps)
+   * @param {e} e event触发得到的e
+   * @param {string} key 所对应到的属性名称 e.g:props.content -> content
+   */
+  changeReactNodeValue = (targetValue, key) => {
+    // set reactinfo的key， 修改reactnode的key
+    const { reactNodeInfo, dragItem, arrIndex } = this.state;
+    let data = _.cloneDeep(reactNodeInfo);
+    let configInfo = data;
+    // 分解key
+    const valuearr = key.split('.');
+    const objkey = valuearr[0];
+    const params = valuearr[1];
+    // 赋值给config里对应的key
+    configInfo[objkey].params[params] = targetValue;
+    this.setState({
+      reactNodeInfo: data
+    })
+    // 对应渲染到页面上
+    dragItem.nodeProps = data;
+    const newdata = itemUpdateInfo(arrIndex, _.cloneDeep(this.state.viewData), dragItem);
+    this.setState({
+      viewData: newdata
+    })
+  }
+
+  /**
+   * @description change事件
+   * @param {string} type 对应类型['props','reactNodeProps']
+   * @param {string} key 所对应到的属性名称 e.g:props.content -> content
+   */
+  changeValueParent = (type, targetValue, key) => {
+    if(type === 'props') {
+      return this.changeValue(targetValue, key);
+    }
+    if(type === 'reactNodeProps') {
+      return this.changeReactNodeValue(targetValue, key);
+    }
+  }
+
+  /**
+   * @description render函数，渲染配置项
+   */
+  renderValue = ({text: title, field: value, type, data}, propsType) => {
+    let valueInfo = propsType === 'props' ? this.state.info: this.state.reactNodeInfo;
+    if( propsType === 'props') {
+      if(value.indexOf('.') != -1) {
+        const valuearr = value.split('.');
+        valuearr.map((item, index) => {
+          if(index == valuearr.length -1) {
+            valueInfo = valueInfo[item];
+          } else {
+            valueInfo = valueInfo[item];
+          }
+        })
+      } else {
+        valueInfo = valueInfo[value];
+      }
     } else {
-      valueInfo = valueInfo[value];
+      // reactnodeinofo; 
+      // 特殊处理,key,只有.的参数
+      const valuearr = value.split('.');
+      const key = valuearr[0];
+      const params = valuearr[1];
+      valueInfo = valueInfo[key].params[params];
     }
     if (type === 'string') {
       return <div style={{display: 'flex', justifyContent: 'space-between'}}>
         <span >{title}</span>
-        <Input value={valueInfo}  style={{ width: '50%' }} onChange={(e) =>this.changeValue(e.target.value, value)} />
+        <Input value={valueInfo}  style={{ width: '50%' }} onChange={(e) =>this.changeValueParent(propsType, e.target.value, value)} />
       </div>;
     }
     if (type === 'array') {
@@ -278,18 +349,30 @@ class Home extends Component {
             defaultValue={valueInfo}
             style={{ width: '50%' }}
             onChange={(v)=>{
-              this.changeValue(v, value)
+              this.changeValueParent(propsType, v, value)
             }}
             >
             {
               data.map((item) => {
-                return <Select.Option value={item}>{item}</Select.Option>
+                return <Select.Option value={item.value}>{item.text}</Select.Option>
               })
             }
             </Select>
         </div>;
     }
+    if(type === 'color') {
+      return <div style={{display: 'flex'}}>
+      <span >{title}</span>
+      <Color color={valueInfo}  style={{ width: '50%' }} onChange={(color) =>this.changeValueParent(propsType, color, value)} />
+    </div>;
+    }
     return <div >other</div>;
+  }
+
+  changeHandler = (c) => {
+    this.setState({
+      color: c,
+    })
   }
 
   render() {
@@ -341,9 +424,15 @@ class Home extends Component {
           <div>
           属性编辑区  
           </div>
+          xxx
+          <div >
+            <Color color={this.state.color} onChange={(c) =>this.changeHandler(c)}></Color>
+          </div>
           ______________
           render...
-          {this.renderConfig(this.state.info2)}
+          {this.renderConfig(this.state.info2, 'props')}
+          ______________
+          {this.state.reactNodeConfig!= {} ? this.renderConfig(this.state.reactNodeConfig, 'reactNodeProps') : null}
         </div>
       </div>
     );

@@ -17,32 +17,80 @@ export default {
                 type: 'array',
                 text: '主题',
                 field: 'type',
-                data: ['primary','ghost','warning']
+                data: [
+                    {
+                        text: '普通primary',
+                        value: 'primary',
+                    },
+                    {
+                        text: '透明',
+                        value: 'ghost',
+                    },
+                    {
+                        text: '警告色红色',
+                        value: 'warning', 
+                    }
+                ]
             },{
                 type: 'array',
                 text: '大小',
                 field: 'size',
-                data: ['large','small']
+                data: [
+                    {
+                        text: '大尺寸',
+                        value: 'large'
+                    },
+                    {
+                        text: '小尺寸',
+                        value: 'small'
+                    }
+                ]
             },{
                 type: 'array',
                 text: '是否禁用',
                 field: 'disabled',
-                data: ['true',false]
+                data: [
+                    {
+                        text: '是',
+                        value: 'true'
+                    },
+                    {
+                        text: '否',
+                        value: false
+                    }
+                ]
             },{
                 type: 'array',
                 text: '行内元素',
                 field: 'inline',
-                data: ['true',false]
+                data: [
+                    {
+                        text: '是',
+                        value: 'true'
+                    },
+                    {
+                        text: '否',
+                        value: false
+                    }
+                ]
             },{
                 type: 'array',
                 text: 'icon',
                 field: 'icon',
                 data: [
-                    'check-circle', 'check', 'check-circle-o',
-                    'cross-circle', 'cross', 'cross-circle-o',
-                    'up', 'down', 'left',
-                    'right', 'ellipsis',
-                    'loading', false
+                    {text: "check-circle", value: "check-circle"},
+                    {text: "check", value: "check"},
+                    {text: "check-circle-o", value: "check-circle-o"},
+                    {text: "cross-circle", value: "cross-circle"},
+                    {text: "cross", value: "cross"},
+                    {text: "cross-circle-o", value: "cross-circle-o"},
+                    {text: "up", value: "up"},
+                    {text: "down", value: "down"},
+                    {text: "left", value: "left"},
+                    {text: "right", value: "right"},
+                    {text: "ellipsis", value: "ellipsis"},
+                    {text: "loading", value: "loading"},
+                    {text: '无', value: false}
                 ]
             }]
         },

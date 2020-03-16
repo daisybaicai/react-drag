@@ -17,8 +17,10 @@
     "lodash": "^4.17.15",
     "npm": "^6.13.4",
     "react": "^16.8.6",
+    "react-color": "^2.18.0",
     "react-dom": "^16.8.6",
     "react-sortablejs": "^1.5.1",
+    "reactcss": "^1.2.3",
     "sortablejs": "^1.10.2",
     "watch-props": "0.0.3"
   },
