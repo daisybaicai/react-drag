@@ -17,13 +17,13 @@ const routes = [
     path: '/',
     routes: [
       {
-        path: '/',
+        path: '/drag',
         component: __IS_BROWSER
           ? _dvaDynamic({
               component: () =>
-                import(/* webpackChunkName: "p__index" */ '../index'),
+                import(/* webpackChunkName: "p__DragView" */ '../DragView'),
             })
-          : require('../index').default,
+          : require('../DragView').default,
         exact: true,
         _title: '前端可视化-reactDrag',
         _title_default: '前端可视化-reactDrag',

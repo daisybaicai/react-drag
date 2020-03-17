@@ -6,7 +6,8 @@ export default {
     {
       path: '/',
       routes: [
-        { path: '/', component: '../pages/index' }
+        // { path: '/', component: '../pages/index' },
+        { path: '/drag', component: '../pages/DragView'}
       ]
     }
   ],

@@ -20,7 +20,7 @@ export function _onCreate() {
     app.use(plugin);
   });
   
-  
+  app.model({ namespace: 'drag', ...(require('/Users/daisiyao/Desktop/boi/react-drag/src/models/drag.js').default) });
   return app;
 }
 
