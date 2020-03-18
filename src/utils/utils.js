@@ -166,3 +166,20 @@ export const itemUpdateInfo = (newIndex, data, dragItem) => {
   }
   return data;
 }
+
+/**
+ * @description 复制元素
+ * @param {*} oldIndex 原来的的Index路径
+ * @param {*} data 原始data
+ * @param {*} dragItem 需要添加的元素
+ */
+export const itemCopy = (oldIndex, data, dragItem) => {
+  const oldIndexArr = indexToArray(oldIndex);
+  const len = oldIndexArr.length;
+  let newIndexArr = oldIndexArr;
+  // 得到新的Index
+  newIndexArr[len-1] = newIndexArr[len -1] + 1;
+  const newIndex = newIndexArr.join('-');
+  const newdata = itemAdd(newIndex, data, dragItem);
+  return newdata;
+}

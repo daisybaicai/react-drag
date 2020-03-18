@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Input, Select } from 'antd';
+import { Input, Select, Button } from 'antd';
 import _ from 'loadsh';
-import { itemUpdateInfo } from '../utils/utils';
+import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
 
 const Config = props => {
@@ -204,8 +204,44 @@ const Config = props => {
     });
   };
 
+
+  /**
+   * @description 删除组件
+   */
+  const RemoveComponent = () => {
+    const newdata = itemRemove(config.arrIndex, _.cloneDeep(currentView));
+    // 发送请求
+    dispatch({
+      type: 'drag/setCurrentView',
+      payload: newdata,
+    });
+  }
+
+  /**
+   * @description 复制组件
+   */
+  const CopyComponent = () => {
+    const newdata = itemCopy(config.arrIndex, _.cloneDeep(currentView), config.dragItem);
+    // 发送请求
+    dispatch({
+      type: 'drag/setCurrentView',
+      payload: newdata,
+    });
+  }
+
+  /**
+   * @description 生成模版
+   */
+  const GenerateTemplate = () => {
+    console.log('生成模版～～');
+  }
+
   return (
     <div>
+      <Button onClick={CopyComponent}>复制组件</Button>
+      <Button onClick={RemoveComponent}>删除组件</Button>
+      <Button onClick={GenerateTemplate}>生成模版</Button>
+      ——————————
       {renderConfig(config.propsConfig, 'props')}
       ______________
       {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
