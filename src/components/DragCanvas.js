@@ -56,7 +56,7 @@ const GlobalComponent = {
 };
 
 const DragCanvas = props => {
-  const { dispatch, currentView } = props;
+  const { dispatch, currentView, selectIndex } = props;
   const payload = comData;
   // useEffect(() => {
   //   dispatch({
@@ -160,15 +160,25 @@ const DragCanvas = props => {
     return data.map((item, i) => {
       // index
       const indexs = index === '' ? String(i) : `${index}-${i}`;
+
+      // 选中时的class
+      let isSelectClass = {
+        border: '1px dashed red',
+      };
+      const isSelect = indexs === selectIndex ? isSelectClass : {};
       // 渲染，有子元素的嵌套的
       if (item.children) {
         let { props: style = {} } = item;
         let draggable = {
           border: '1px dashed black',
         };
-        let mergestyle = Object.assign({}, style.style, draggable);
+        let mergestyle = Object.assign({}, style.style, draggable, isSelect);
         return (
-          <div style={mergestyle} data-id={indexs} key={_.uniqueId()}>
+          <div
+            style={mergestyle}
+            data-id={indexs}
+            key={_.uniqueId()}
+          >
             <Sortable
               style={{
                 minHeight: 50,
@@ -200,17 +210,21 @@ const DragCanvas = props => {
           ReactNodeProps[key] = func(params);
         }
       }
-      const props = {
+      let props = {
         'data-id': indexs,
         key: _.uniqueId(),
         ...item.props,
         ...ReactNodeProps,
       };
       if (item.needDiv == true) {
+        let draggable = {
+          border: '1px dashed blue',
+        };
+        let mergestyle = Object.assign({}, draggable, isSelect);
         return (
           <div
             data-id={indexs}
-            style={{ border: '1px dashed blue' }}
+            style={mergestyle}
             key={_.uniqueId()}
           >
             {React.createElement(
@@ -221,9 +235,17 @@ const DragCanvas = props => {
           </div>
         );
       } else {
+        let borderStyle = isSelect.border || '';
+        let cloneProps = _.cloneDeep(props);
+        let MergeProps = _.merge(cloneProps, {
+          style: {
+            border: borderStyle
+          }
+        });
+        
         return React.createElement(
           Comp,
-          props,
+          MergeProps,
           item.props.content ? item.props.content : null,
         );
       }
@@ -256,4 +278,5 @@ const DragCanvas = props => {
 
 export default connect(({ drag }) => ({
   currentView: drag.currentView,
+  selectIndex: drag.config.arrIndex,
 }))(DragCanvas);
