@@ -113,6 +113,18 @@ const DragCanvas = props => {
     const componetFromList = findItemObject(componetList, comNameOrPath);
     const newData = itemAdd(newIndex, oldData, componetFromList);
 
+
+    // 判断是否属于antd componets，像div不需要加
+    // 只有在首次加入的时候，需要添加type的类型，也就是发送请求
+    console.log('type', comNameOrPath);
+
+    if(comNameOrPath !='div'){
+      dispatch({
+        type: 'drag/addDependComponents',
+        payload: comNameOrPath
+      })
+    }
+
     // 修改currentview
     dispatch({
       type: 'drag/setCurrentView',
@@ -279,4 +291,5 @@ const DragCanvas = props => {
 export default connect(({ drag }) => ({
   currentView: drag.currentView,
   selectIndex: drag.config.arrIndex,
+  dependComponents: drag.dependComponents
 }))(DragCanvas);

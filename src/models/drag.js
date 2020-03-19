@@ -14,6 +14,7 @@ const SettingModel = {
       },
     ],
     config: {},
+    dependComponents: [],
   },
   effects: {
     *setCurrentView({ payload }, { _, put }) {
@@ -28,6 +29,18 @@ const SettingModel = {
         payload,
       });
     },
+    *addDependComponents({ payload }, { _, put }) {
+      yield put({
+        type: 'saveDependComponents',
+        payload
+      })
+    },
+    *removeDependComponents({ payload}, {_, put}) {
+      yield put({
+        type: 'deleteDependComponents',
+        payload,
+      })
+    }
   },
   reducers: {
     saveCurrentView(state, { payload }) {
@@ -35,10 +48,22 @@ const SettingModel = {
     },
     saveConfig(state, { payload }) {
       const config = Object.assign({}, state.config, {
-        ...payload
+        ...payload,
       });
       return { ...state, config };
     },
+    saveDependComponents(state, { payload }) {
+      const newArr = [...state.dependComponents, payload]
+      return {...state, dependComponents: newArr};
+    },
+    deleteDependComponents(state, { payload }) {
+      // const newArr = [...state.dependComponents, payload]
+      // return {...state, dependComponents: newArr};
+      let oldArr = [...state.dependComponents];
+      let Index = oldArr.lastIndexOf(payload);
+      let newArr = oldArr.splice(Index, 1);
+      return {...state, dependComponents: newArr};
+    }
   },
 };
 export default SettingModel;

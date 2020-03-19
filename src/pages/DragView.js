@@ -4,8 +4,11 @@ import classNames from 'classnames';
 import ComponentList from '../components/ComponentList';
 import DragCanvas from '../components/DragCanvas';
 import ComponentConfig from '../components/ComponentConfig';
+import { routerRedux } from 'dva/router';
+import { connect } from 'dva';
 
-export default function IndexView() {
+const IndexView = (props) => {
+  const { dispatch } = props;
   const [comListHidden, setComListHidden] = useState(false)
 
   /**
@@ -19,11 +22,19 @@ export default function IndexView() {
     [styles.hidden]: comListHidden === true,
   })
 
+  /**
+   * @description 生成预览代码
+   */
+  const CodePreview = () => {
+    dispatch(routerRedux.push('/codePreview'));
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.LeftContainer}>
         <div className={styles.header}>
           <div className={styles.btnList}>
+            <div onClick={CodePreview}>生成代码预览</div>
             <div className={styles.btn}>预览</div>
             <div className={styles.btn}>保存</div>
             <div className={styles.btn}>全屏</div>
@@ -51,3 +62,5 @@ export default function IndexView() {
     </div>
   );
 }
+
+export default connect()(IndexView);
