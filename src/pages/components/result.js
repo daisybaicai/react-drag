@@ -12,10 +12,11 @@ export default {
         img: {
             renderFunc: ({icon, color}) => {
                 return (
-                    <>
                       <Icon type={icon} className="spe" size="lg" style={{ fill: color }} />
-                    </>
                   )
+            },
+            renderString: ({icon, color}) => {
+                return `<Icon type={${icon}} className="spe" size="lg" style={{ fill: ${color} }} />`
             },
             params: {
                 icon: 'check-circle',

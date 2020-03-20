@@ -113,6 +113,7 @@ const DragCanvas = props => {
     const componetFromList = findItemObject(componetList, comNameOrPath);
     const newData = itemAdd(newIndex, oldData, componetFromList);
 
+
     // 修改currentview
     dispatch({
       type: 'drag/setCurrentView',
