@@ -29,18 +29,6 @@ const routes = [
         _title_default: '前端可视化-reactDrag',
       },
       {
-        path: '/codePreview',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              component: () =>
-                import(/* webpackChunkName: "p__codePreview" */ '../codePreview'),
-            })
-          : require('../codePreview').default,
-        exact: true,
-        _title: '前端可视化-reactDrag',
-        _title_default: '前端可视化-reactDrag',
-      },
-      {
         component: () =>
           React.createElement(
             require('/Users/daisiyao/Desktop/boi/react-drag/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')

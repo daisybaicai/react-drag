@@ -27,7 +27,7 @@ const SettingModel = {
         type: 'saveConfig',
         payload,
       });
-    }
+    },
   },
   reducers: {
     saveCurrentView(state, { payload }) {
@@ -35,10 +35,10 @@ const SettingModel = {
     },
     saveConfig(state, { payload }) {
       const config = Object.assign({}, state.config, {
-        ...payload,
+        ...payload
       });
       return { ...state, config };
-    }
+    },
   },
 };
 export default SettingModel;
