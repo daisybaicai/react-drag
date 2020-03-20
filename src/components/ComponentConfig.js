@@ -215,13 +215,6 @@ const Config = props => {
       type: 'drag/setCurrentView',
       payload: newdata,
     });
-
-    const comNameOrPath = config.dragItem.type;
-    console.log('delelte', comNameOrPath);
-    dispatch({
-      type: 'drag/removeDependComponents',
-      payload: comNameOrPath
-    })
   }
 
   /**
@@ -234,17 +227,6 @@ const Config = props => {
       type: 'drag/setCurrentView',
       payload: newdata,
     });
-    // 判断是否属于antd componets，像div不需要加
-    // 只有在首次加入的时候，需要添加type的类型，也就是发送请求
-    const comNameOrPath = config.dragItem.type;
-    console.log('type', comNameOrPath);
-
-    if(comNameOrPath !='div'){
-      dispatch({
-        type: 'drag/addDependComponents',
-        payload: comNameOrPath
-      })
-    }
   }
 
   /**
