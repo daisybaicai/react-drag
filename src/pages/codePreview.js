@@ -74,16 +74,14 @@ const codePreview = props => {
           <${item.type} ${renderStyle(item.props.style)}>
             ${renderDom(item.children)}
           </${item.type}>
-        `;
+          `;
       } else {
         const { props, nodeProps } = item;
-        result += `
-          <${item.type} ${renderProps(props)} ${renderNodeProps(
-          nodeProps,
-        )} ${renderStyle(props.style)}>${props.content ? props.content : ''}</${
-          item.type
-        }>
-        `;
+        result += `<${item.type} ${renderProps(props)} ${renderNodeProps(
+            nodeProps,
+          )}${renderStyle(props.style)}>${props.content ? props.content : ''}</${
+            item.type
+          }>`;
       }
     });
     return result;
