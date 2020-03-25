@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Input, Select, Button } from 'antd';
+import { Input, Select, Button, Modal, Form } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
 
 const Config = props => {
-  const { config, currentView, dispatch } = props;
+  const [visible, setVisible] = useState(false);
+  const { config, currentView, dispatch, form } = props;
+  const { getFieldDecorator } = form;
   /**
    * @description 配置项的渲染组件
    * @param {*} data 该配置项的数据结构
@@ -85,7 +87,9 @@ const Config = props => {
           >
             {data.map((item, index) => {
               return (
-                <Select.Option value={item.value} key={index}>{item.text}</Select.Option>
+                <Select.Option value={item.value} key={index}>
+                  {item.text}
+                </Select.Option>
               );
             })}
           </Select>
@@ -204,7 +208,6 @@ const Config = props => {
     });
   };
 
-
   /**
    * @description 删除组件
    */
@@ -215,26 +218,58 @@ const Config = props => {
       type: 'drag/setCurrentView',
       payload: newdata,
     });
-  }
+  };
 
   /**
    * @description 复制组件
    */
   const CopyComponent = () => {
-    const newdata = itemCopy(config.arrIndex, _.cloneDeep(currentView), config.dragItem);
+    const newdata = itemCopy(
+      config.arrIndex,
+      _.cloneDeep(currentView),
+      config.dragItem,
+    );
     // 发送请求
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
     });
-  }
+  };
 
   /**
    * @description 生成模版
    */
   const GenerateTemplate = () => {
-    console.log('生成模版～～');
-  }
+    setVisible(true);
+  };
+
+  const hideModal = () => {
+    setVisible(false);
+  };
+
+  /**
+   * @description 提交表单
+   * @param {*} e 
+   */
+  const submitForm = e => {
+    console.log('e', e);
+    const {
+      form: { validateFields },
+    } = props;
+    validateFields((err, value) => {
+      if (!err) {
+        let payload = {
+          name: value.componentName,
+          code: config.dragItem
+        }
+        dispatch({
+          type: 'drag/setTemplateList',
+          payload
+        })
+        hideModal();
+      }
+    });
+  };
 
   return (
     <div>
@@ -245,6 +280,27 @@ const Config = props => {
       {renderConfig(config.propsConfig, 'props')}
       ______________
       {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
+      ______________
+      
+      <Modal
+        width="50%"
+        title="生成模版"
+        visible={visible}
+        onOk={submitForm}
+        onCancel={hideModal}
+        okText="确认"
+        cancelText="取消"
+      >
+        <div>
+          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
+            <Form.Item label="组件名称">
+              {getFieldDecorator('componentName', {
+                rules: [{ required: true, message: '请输入组件名称' }],
+              })(<Input />)}
+            </Form.Item>
+          </Form>
+        </div>
+      </Modal>
     </div>
   );
 };
@@ -252,4 +308,4 @@ const Config = props => {
 export default connect(({ drag }) => ({
   config: drag.config,
   currentView: drag.currentView,
-}))(Config);
+}))(Form.create()(Config));
