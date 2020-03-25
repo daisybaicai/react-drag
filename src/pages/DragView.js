@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import styles from './home.less'
+import styles from './home.less';
 import classNames from 'classnames';
 import ComponentList from '../components/ComponentList';
+import TemplateList from '../components/TemplateList';
 import DragCanvas from '../components/DragCanvas';
 import ComponentConfig from '../components/ComponentConfig';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
 
-const IndexView = (props) => {
+const IndexView = props => {
   const { dispatch } = props;
-  const [comListHidden, setComListHidden] = useState(false)
+  const [comListHidden, setComListHidden] = useState(false);
 
   /**
    * @description 左边切换的事件，是否显示componentList
    */
   const toggleComponentList = () => {
-    setComListHidden(!comListHidden)
-  }
+    setComListHidden(!comListHidden);
+  };
 
   const cls = classNames(styles.ComponentList, {
     [styles.hidden]: comListHidden === true,
-  })
+  });
 
   /**
    * @description 生成预览代码
    */
   const CodePreview = () => {
     dispatch(routerRedux.push('/codePreview'));
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -46,7 +49,14 @@ const IndexView = (props) => {
           </div>
           <div className={styles.editRegion}>
             <div className={cls}>
-              <ComponentList />
+            <Tabs>
+              <TabPane tab="公共组件" key="1">
+                <ComponentList />
+              </TabPane>
+              <TabPane tab="组件模版" key="2">
+                <TemplateList />
+              </TabPane>
+            </Tabs>
             </div>
             <div className={styles.dragRegion}>
               <DragCanvas />
@@ -61,6 +71,6 @@ const IndexView = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default connect()(IndexView);

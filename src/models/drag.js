@@ -14,6 +14,7 @@ const SettingModel = {
       },
     ],
     config: {},
+    templateList: [],
   },
   effects: {
     *setCurrentView({ payload }, { _, put }) {
@@ -27,7 +28,13 @@ const SettingModel = {
         type: 'saveConfig',
         payload,
       });
-    }
+    },
+    *setTemplateList({ payload }, { _, put }) {
+      yield put({
+        type: 'saveTemplateList',
+        payload,
+      });
+    },
   },
   reducers: {
     saveCurrentView(state, { payload }) {
@@ -38,7 +45,11 @@ const SettingModel = {
         ...payload,
       });
       return { ...state, config };
-    }
+    },
+    saveTemplateList(state, { payload }) {
+      const newList = [...state.templateList, { ...payload }];
+      return { ...state, templateList: newList };
+    },
   },
 };
 export default SettingModel;
