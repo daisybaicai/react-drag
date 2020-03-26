@@ -4,13 +4,15 @@ import _ from 'loadsh';
 import { Tag, Button } from 'antd-mobile';
 import { connect } from 'dva';
 
-const sortOptions = {
+const sortableOption = {
+  animation: 150,
+  fallbackOnBody: true,
+  swapThreshold: 0.65,
   group: {
     name: 'formItem',
     pull: 'clone',
     put: true,
   },
-  sort: false,
 };
 
 const TemplateList = props => {
@@ -18,56 +20,33 @@ const TemplateList = props => {
   const { templateList } = props;
 
   useEffect(() => {
-    console.log('useeffect');
     setList(templateList);
-    console.log('list', templateList, list);
-  });
+  }, [props.templateList]);
 
   const renderComponent = data => {
     console.log('data', data);
     return data.map(item => {
       return (
-        <div key={_.uniqueId()}>
+        <div key={_.uniqueId()} data-id={`com-${item.name}`}>
           <Tag>{item.name}</Tag>
         </div>
       );
     });
   };
 
-  const renderComponent2 = data => {
-    console.log('render2data', data);
-    return <Sortable options={sortOptions}>{renderComponent(data)}</Sortable>;
-  };
-
-  const [state, setState] = useState([
-    { id: 1, name: 'shrek' },
-    { id: 2, name: 'fiona' },
-  ]);
-
-  const clickthings = () => {
-    console.log('...', state);
-    let arr1 = state;
-    arr1.push({
-      id: parseInt(Math.random() * 1000),
-      name: 'dd' + Math.random(),
-    });
-    setState(arr1);
-  };
-
   return (
     <>
-      <Button onClick={clickthings}>33</Button>
-      {/* <Sortable options={sortOptions}>{renderComponent(list)}</Sortable> */}
       --
-      {renderComponent(list)}
-      __
-      {renderComponent2(list)}
-      __
-      {/* <Sortable>
-        {state.map(item => (
-          <div key={item.id}>{item.name}</div>
-        ))}
-      </Sortable> */}
+      {
+        <Sortable
+          options={{
+            ...sortableOption,
+          }}
+          key={_.uniqueId()}
+        >
+          {renderComponent(templateList)}
+        </Sortable>
+      }
     </>
   );
 };
