@@ -21,7 +21,7 @@
     "react-color": "^2.18.0",
     "react-dom": "^16.8.6",
     "react-monaco-editor": "^0.34.0",
-    "react-sortablejs": "^2.0.9",
+    "react-sortablejs": "^1.5.1",
     "reactcss": "^1.2.3",
     "sortablejs": "^1.10.2",
     "watch-props": "0.0.3"

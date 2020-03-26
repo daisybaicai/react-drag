@@ -183,3 +183,21 @@ export const itemCopy = (oldIndex, data, dragItem) => {
   const newdata = itemAdd(newIndex, data, dragItem);
   return newdata;
 }
+
+/**
+ * @description 是组件模版还是组件
+ * @param {*} name 
+ */
+export const isTemporCom = name => {
+  return name.indexOf('com-') > -1;
+}
+
+/**
+ * @description 找到组件模版的code
+ * @param {*} list 
+ * @param {*} name 
+ */
+export const findTempCode = (list, name) => {
+  const currentArr = _.find(list, { 'name': name});
+  return currentArr.code;
+}

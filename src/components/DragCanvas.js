@@ -18,6 +18,8 @@ import {
   itemAdd,
   itemRemove,
   findItemObject,
+  isTemporCom,
+  findTempCode
 } from '../utils/utils';
 import componetList from '../pages/config';
 import { connect } from 'dva';
@@ -56,8 +58,7 @@ const GlobalComponent = {
 };
 
 const DragCanvas = props => {
-  const { dispatch, currentView, selectIndex } = props;
-  const payload = comData;
+  const { dispatch, currentView, selectIndex, templateList } = props;
   // useEffect(() => {
   //   dispatch({
   //     type: 'drag/setCurrentView',
@@ -110,9 +111,22 @@ const DragCanvas = props => {
       });
       return;
     }
+    if (isTemporCom(comNameOrPath)) {
+      // 拿到com-后面的com 然后再查找对应的位置，然后插入代码
+      const temName = comNameOrPath.split('com-')[1];
+      // findTempCode
+      const tempObj = findTempCode(templateList, temName);
+      const newData = itemAdd(newIndex, oldData, tempObj);
+
+      // 修改currentview
+      dispatch({
+        type: 'drag/setCurrentView',
+        payload: newData,
+      });
+      return;
+    }
     const componetFromList = findItemObject(componetList, comNameOrPath);
     const newData = itemAdd(newIndex, oldData, componetFromList);
-
 
     // 修改currentview
     dispatch({
@@ -175,11 +189,7 @@ const DragCanvas = props => {
         };
         let mergestyle = Object.assign({}, style.style, draggable, isSelect);
         return (
-          <div
-            style={mergestyle}
-            data-id={indexs}
-            key={_.uniqueId()}
-          >
+          <div style={mergestyle} data-id={indexs} key={_.uniqueId()}>
             <Sortable
               style={{
                 minHeight: 50,
@@ -223,11 +233,7 @@ const DragCanvas = props => {
         };
         let mergestyle = Object.assign({}, draggable, isSelect);
         return (
-          <div
-            data-id={indexs}
-            style={mergestyle}
-            key={_.uniqueId()}
-          >
+          <div data-id={indexs} style={mergestyle} key={_.uniqueId()}>
             {React.createElement(
               Comp,
               props,
@@ -240,10 +246,10 @@ const DragCanvas = props => {
         let cloneProps = _.cloneDeep(props);
         let MergeProps = _.merge(cloneProps, {
           style: {
-            border: borderStyle
-          }
+            border: borderStyle,
+          },
         });
-        
+
         return React.createElement(
           Comp,
           MergeProps,
@@ -280,4 +286,5 @@ const DragCanvas = props => {
 export default connect(({ drag }) => ({
   currentView: drag.currentView,
   selectIndex: drag.config.arrIndex,
+  templateList: drag.templateList,
 }))(DragCanvas);
