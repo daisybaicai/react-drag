@@ -11,7 +11,7 @@ import { Tabs } from 'antd';
 const { TabPane } = Tabs;
 
 const IndexView = props => {
-  const { dispatch } = props;
+  const { dispatch, currentView } = props;
   const [comListHidden, setComListHidden] = useState(false);
 
   /**
@@ -32,11 +32,28 @@ const IndexView = props => {
     dispatch(routerRedux.push('/codePreview'));
   };
 
+  useEffect(() => {
+    // 首次执行
+    console.log('mount----');
+    // 发送setcurrentview
+    dispatch({
+      type: 'drag/getPageCode'
+    })
+  }, [])
+
+  const postToServer = () => {
+    dispatch({
+      type: 'drag/putPageCode',
+      payload: {code: currentView}
+    })
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.LeftContainer}>
         <div className={styles.header}>
           <div className={styles.btnList}>
+          <div onClick={postToServer}>保存到服务器</div>
             <div onClick={CodePreview}>生成代码预览</div>
             <div className={styles.btn}>预览</div>
             <div className={styles.btn}>保存</div>
@@ -73,4 +90,6 @@ const IndexView = props => {
   );
 };
 
-export default connect()(IndexView);
+export default connect(({drag}) => ({
+  currentView: drag.currentView
+}))(IndexView);
