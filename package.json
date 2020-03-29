@@ -10,6 +10,7 @@
   "dependencies": {
     "antd": "^3.19.5",
     "antd-mobile": "^2.3.1",
+    "axios": "^0.19.2",
     "classnames": "~2.2.6",
     "dva": "^2.6.0-beta.6",
     "install": "^0.13.0",

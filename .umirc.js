@@ -9,6 +9,7 @@ export default {
         // { path: '/', component: '../pages/index' },
         { path: '/drag', component: '../pages/DragView'},
         { path: '/codePreview', component: '../pages/codePreview'},
+        { path: '/login', component: '../pages/login'},
       ]
     }
   ],
@@ -32,4 +33,11 @@ export default {
       },
     }],
   ],
+  proxy: {
+    '/api': {
+      'target': 'http://localhost:3000/api',
+      'changeOrigin': true,
+      'pathRewrite': { '^/api' : '' },
+    },
+  },
 }

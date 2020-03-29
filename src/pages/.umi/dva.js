@@ -21,6 +21,7 @@ export function _onCreate() {
   });
   
   app.model({ namespace: 'drag', ...(require('/Users/daisiyao/Desktop/boi/react-drag/src/models/drag.js').default) });
+app.model({ namespace: 'login', ...(require('/Users/daisiyao/Desktop/boi/react-drag/src/models/login.js').default) });
   return app;
 }
 
