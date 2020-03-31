@@ -1,6 +1,7 @@
 export default {
 	type: "InputItem",
 	title: "输入文本框",
+	src: "inputitem.png",
 	needDiv: true,
 	nested: false,
 	props: {

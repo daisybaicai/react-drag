@@ -2,7 +2,8 @@ import { Icon } from 'antd-mobile'
 export default {
 	type: 'Result',
 	title: "结果页面",
-	nested: false,
+    nested: false,
+    src: "result.png",
 	props: {
         style: {},
         title: "支付失败",

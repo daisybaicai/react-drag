@@ -1,6 +1,7 @@
 export default {
 	type: 'NavBar',
-	title: "导航栏",
+    title: "导航栏",
+    src: "navbar.png",
 	nested: false,
 	props: {
 		content: '导航栏',

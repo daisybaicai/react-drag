@@ -7,6 +7,13 @@ import DragCanvas from '../components/DragCanvas';
 import ComponentConfig from '../components/ComponentConfig';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import {
+  SmileTwoTone,
+  TeamOutlined,
+  CheckCircleOutlined,
+  SyncOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Tabs, Input, Modal, Form } from 'antd';
 const { TabPane } = Tabs;
 const { TextArea } = Input;
@@ -47,8 +54,8 @@ const IndexView = props => {
       type: 'orginzation/getOrgArr',
     });
     dispatch({
-      type: 'drag/getOwnTemplate'
-    })
+      type: 'drag/getOwnTemplate',
+    });
   }, []);
 
   /**
@@ -106,17 +113,34 @@ const IndexView = props => {
       <div className={styles.LeftContainer}>
         <div className={styles.header}>
           <div className={styles.btnList}>
-            <div className={styles.btn} onClick={createOrginzation}>新建组织</div>
-            <div className={styles.btn} onClick={postToServer}>保存到服务器</div>
-            <div className={styles.btn} onClick={CodePreview}>生成代码预览</div>
-            <div className={styles.btn}>预览</div>
-            <div className={styles.btn}>保存</div>
-            <div className={styles.btn}>全屏</div>
+            <div className={styles.logo}>React-Drag</div>
+            <div className={styles.operation}>
+              <div className={styles.btn} onClick={createOrginzation}>
+                <TeamOutlined style={{ fontSize: '22px' }} />
+                新建组织
+              </div>
+              <div className={styles.btn} onClick={postToServer}>
+                <CheckCircleOutlined style={{ fontSize: '22px' }} />
+                保存到服务器
+              </div>
+              <div className={styles.btn} onClick={CodePreview}>
+                <SyncOutlined style={{ fontSize: '22px' }} />
+                生成代码预览
+              </div>
+            </div>
+            <div className={styles.userCenter}>
+              <div className={styles.btn} onClick={CodePreview}>
+                <UserOutlined style={{ fontSize: '22px' }} />
+                用户中心
+              </div>
+            </div>
           </div>
         </div>
         <div className={styles.content}>
           <div className={styles.settings}>
-            <span onClick={toggleComponentList}>按钮</span>
+            <span onClick={toggleComponentList}>
+              <SmileTwoTone style={{ fontSize: '24px' }} />
+            </span>
           </div>
           <div className={styles.editRegion}>
             <div className={cls}>
@@ -133,12 +157,12 @@ const IndexView = props => {
               <DragCanvas />
             </div>
           </div>
+          <div className={styles.RightContainer}>
+            <div className={styles.title}>属性编辑区</div>
+            <ComponentConfig />
+          </div>
         </div>
         <div className={styles.footer}>底部</div>
-      </div>
-      <div className={styles.RightContainer}>
-        <div>属性编辑区</div>
-        <ComponentConfig />
       </div>
       <Modal
         width="50%"

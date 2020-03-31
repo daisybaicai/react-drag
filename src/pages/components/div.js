@@ -1,5 +1,6 @@
 export default {
   type: 'div',
+  src: "div.png",
   title: 'div容器',
   nested: true,
   props: {

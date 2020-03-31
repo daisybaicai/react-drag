@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Input, Select, Button, Modal, Form } from 'antd';
+import { Input, Select, Button, Modal, Form, Collapse } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
 const { Option } = Select;
+const { Panel } = Collapse;
 
 const Config = props => {
   const [visible, setVisible] = useState(false);
@@ -19,16 +20,18 @@ const Config = props => {
     if (JSON.stringify(data) !== '[]' && data) {
       return data.map((item, index) => {
         return (
-          <div key={index}>
-            <div>
+          <Panel header={item.text} key={item.text}>
+            <div key={index}>
+              {/* <div>
               <h3>{item.text}</h3>
+            </div> */}
+              <div>
+                {item.children.map((item, index) => {
+                  return <div key={index}>{renderValue(item, type)}</div>;
+                })}
+              </div>
             </div>
-            <div>
-              {item.children.map((item, index) => {
-                return <div key={index}>{renderValue(item, type)}</div>;
-              })}
-            </div>
-          </div>
+          </Panel>
         );
       });
     }
@@ -262,7 +265,7 @@ const Config = props => {
       if (!err) {
         let payload = {
           ...value,
-          comCode: config.dragItem
+          comCode: config.dragItem,
         };
         dispatch({
           type: 'drag/setTemplateList',
@@ -283,14 +286,19 @@ const Config = props => {
 
   return (
     <div>
-      <Button onClick={CopyComponent}>复制组件</Button>
-      <Button onClick={RemoveComponent}>删除组件</Button>
-      <Button onClick={GenerateTemplate}>生成模版</Button>
-      ——————————
-      {renderConfig(config.propsConfig, 'props')}
-      ______________
-      {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
-      ______________
+      <Button onClick={CopyComponent} icon="copy" size="small">
+        复制组件
+      </Button>
+      <Button onClick={RemoveComponent} icon="delete" size="small">
+        删除组件
+      </Button>
+      <Button onClick={GenerateTemplate} icon="edit" size="small">
+        生成模版
+      </Button>
+      <Collapse defaultActiveKey={['样式','主题','文字内容']}>
+        {renderConfig(config.propsConfig, 'props')}
+        {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
+      </Collapse>
       <Modal
         width="50%"
         title="生成模版"

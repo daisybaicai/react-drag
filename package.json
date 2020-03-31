@@ -8,6 +8,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.0.5",
     "antd": "^3.19.5",
     "antd-mobile": "^2.3.1",
     "axios": "^0.19.2",
