@@ -4,10 +4,12 @@ import { Input, Select, Button, Modal, Form } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
+const { Option } = Select;
 
 const Config = props => {
   const [visible, setVisible] = useState(false);
-  const { config, currentView, dispatch, form } = props;
+  const [showOrginzation, setShowOrginzation] = useState(false);
+  const { config, currentView, dispatch, form, orgArr } = props;
   const { getFieldDecorator } = form;
   /**
    * @description 配置项的渲染组件
@@ -249,7 +251,7 @@ const Config = props => {
 
   /**
    * @description 提交表单
-   * @param {*} e 
+   * @param {*} e
    */
   const submitForm = e => {
     console.log('e', e);
@@ -259,16 +261,24 @@ const Config = props => {
     validateFields((err, value) => {
       if (!err) {
         let payload = {
-          name: value.componentName,
-          code: config.dragItem
-        }
+          ...value,
+          comCode: config.dragItem
+        };
         dispatch({
           type: 'drag/setTemplateList',
-          payload
-        })
+          payload,
+        });
         hideModal();
       }
     });
+  };
+
+  const handleChange = value => {
+    if (value === 'ORGINZATION') {
+      setShowOrginzation(true);
+    } else {
+      setShowOrginzation(false);
+    }
   };
 
   return (
@@ -281,7 +291,6 @@ const Config = props => {
       ______________
       {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
       ______________
-      
       <Modal
         width="50%"
         title="生成模版"
@@ -294,10 +303,40 @@ const Config = props => {
         <div>
           <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
             <Form.Item label="组件名称">
-              {getFieldDecorator('componentName', {
+              {getFieldDecorator('comName', {
                 rules: [{ required: true, message: '请输入组件名称' }],
               })(<Input />)}
             </Form.Item>
+            <Form.Item label="组件状态">
+              {getFieldDecorator('comStatus', {
+                rules: [{ required: true, message: '请输入组件状态' }],
+              })(
+                <Select style={{ width: 120 }} onChange={handleChange}>
+                  <Option value="PUBLIC">公开</Option>
+                  <Option value="PERSONAL">个人</Option>
+                  <Option value="ORGINZATION">组织</Option>
+                </Select>,
+              )}
+            </Form.Item>
+            {showOrginzation ? (
+              <>
+                <Form.Item label="所属组织">
+                  {getFieldDecorator('comOrgArr', {
+                    rules: [{ required: true, message: '请选择所属组织' }],
+                  })(
+                    <Select
+                      mode="multiple"
+                      style={{ width: '100%' }}
+                      placeholder="请选择组件所公开属于的组织"
+                    >
+                      {orgArr.map(item => (
+                        <Option key={item}>{item}</Option>
+                      ))}
+                    </Select>,
+                  )}
+                </Form.Item>
+              </>
+            ) : null}
           </Form>
         </div>
       </Modal>
@@ -305,7 +344,8 @@ const Config = props => {
   );
 };
 
-export default connect(({ drag }) => ({
+export default connect(({ drag, orginzation }) => ({
   config: drag.config,
   currentView: drag.currentView,
+  orgArr: orginzation.orgArr,
 }))(Form.create()(Config));
