@@ -2,6 +2,7 @@ export default {
 	type: 'Tag',
 	title: "标签",
 	nested: false,
+	src: "tag.png",
 	props: {
 		content: 'tag',
 		style: {}

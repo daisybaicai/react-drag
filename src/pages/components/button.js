@@ -1,5 +1,6 @@
 export default {
     type: "Button",
+    src: "button.png",
     title: "按钮",
     props: {
         type: 'primary',

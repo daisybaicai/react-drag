@@ -36,7 +36,6 @@ const TemplateList = props => {
 
   return (
     <>
-      --
       {
         <Sortable
           options={{

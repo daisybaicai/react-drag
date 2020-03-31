@@ -10,6 +10,7 @@ export default {
         { path: '/drag', component: '../pages/DragView'},
         { path: '/codePreview', component: '../pages/codePreview'},
         { path: '/login', component: '../pages/login'},
+        { path: '/register', component: '../pages/register'},
       ]
     }
   ],

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { connect } from 'dva';
+import styles from './login.less';
+import { Link } from 'umi';
 
 const login = props => {
   const { form, dispatch } = props;
@@ -26,69 +28,39 @@ const login = props => {
     });
   };
 
-  const submitFormResigster = e => {
-    console.log(e);
-    const {
-      form: { validateFields },
-    } = props;
-    validateFields((err, values) => {
-      if (!err) {
-        const payload = {
-          username: values.username,
-          password: values.password,
-        };
-        dispatch({
-          type: 'user/register',
-          payload,
-        });
-        console.log('values', values);
-      }
-    });
-  }
-
   return (
     <>
-      登陆
-      <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
-        <Form.Item label="username">
-          {getFieldDecorator('username', {
-            rules: [{ required: true, message: '请输入username' }],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="password">
-          {getFieldDecorator('password', {
-            rules: [{ required: true, message: '请输入password' }],
-          })(<Input.Password />)}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" onClick={submitForm}>
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-      ---- 注册
-      {/* <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
-        <Form.Item label="username">
-          {getFieldDecorator('username', {
-            rules: [{ required: true, message: '请输入username' }],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="password">
-          {getFieldDecorator('password', {
-            rules: [{ required: true, message: '请输入password' }],
-          })(<Input.Password />)}
-        </Form.Item>
-        <Form.Item label="repassword">
-          {getFieldDecorator('repassword', {
-            rules: [{ required: true, message: '请输入password' }],
-          })(<Input.Password />)}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" onClick={submitFormResigster}>
-            Submit
-          </Button>
-        </Form.Item>
-      </Form> */}
+      <div className={styles.container}>
+        <div className={styles.logForm}>
+          <h2>登陆</h2>
+          <div className={styles.form}>
+            <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+              <Form.Item label="用户名">
+                {getFieldDecorator('username', {
+                  rules: [{ required: true, message: '请输入username' }],
+                })(<Input />)}
+              </Form.Item>
+              <Form.Item label="密码">
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: '请输入password' }],
+                })(<Input.Password />)}
+              </Form.Item>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={submitForm}
+                className={styles.btn}
+              >
+                登陆
+              </Button>
+              <Link to="/register" className={styles.link}>
+                注册
+              </Link>
+            </Form>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

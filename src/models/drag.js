@@ -23,7 +23,7 @@ const SettingModel = {
   effects: {
     *getPageCode(_, { call, put }) {
       const response = yield call(getPageCode);
-      if (response) {
+      if (response && response.code == 200) {
         let payload = response.data.code;
         payload = eval('(' + payload + ')');
         yield put({

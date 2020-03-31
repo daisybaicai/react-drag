@@ -23,7 +23,7 @@ const orginzationgModel = {
           payload: response.data.orgArr
         })
       } else {
-        message.error(response.msg);
+        // message.error(response.msg);
       }
     }
   },

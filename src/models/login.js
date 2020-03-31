@@ -26,8 +26,8 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(register, payload);
-      if (response) {
-        console.log('res', response);
+      if (response && response.code == 200) {
+        message.success(response.msg);
       } else {
         message.error(response.msg || '注册失败，请重新注册');
       }

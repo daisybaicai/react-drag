@@ -11,22 +11,27 @@ const sortOptions = {
     put: false,
   },
   sort: false,
+  draggable: '.item',
 };
 
-const renderComponent = (data) =>  {
+const renderComponent = data => {
   return data.map(item => {
+    const img = require(`../assets/components/${item.src}`);
     return (
-      <div data-id={item.type} key={_.uniqueId()}>
-        <Tag>{item.title}</Tag>
-      </div>
+      <>
+        <div style={{ fontSize: '14px', fontWeight: '700', color: '#595959' }} key={_.uniqueId()}>
+          {item.title}
+        </div>
+        <span data-id={item.type} key={_.uniqueId()} className="item" style={{ border: '1px dashed #b9b9b9', marginBottom: '4px', cursor: 'move', padding: '4px', display: 'inline-block'}}>
+          <img src={img} />
+        </span>
+      </>
     );
   });
-}
+};
 
 export default function ComponentList() {
-    return (
-      <Sortable options={sortOptions}>
-        {renderComponent(componentList)}
-      </Sortable> 
-    )
+  return (
+    <Sortable options={sortOptions}>{renderComponent(componentList)}</Sortable>
+  );
 }
