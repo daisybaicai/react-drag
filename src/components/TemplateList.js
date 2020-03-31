@@ -27,8 +27,8 @@ const TemplateList = props => {
     console.log('data', data);
     return data.map(item => {
       return (
-        <div key={_.uniqueId()} data-id={`com-${item.name}`}>
-          <Tag>{item.name}</Tag>
+        <div key={_.uniqueId()} data-id={`com-${item.com_name}`}>
+          <Tag>{item.com_name}</Tag>
         </div>
       );
     });

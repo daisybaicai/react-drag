@@ -198,6 +198,6 @@ export const isTemporCom = name => {
  * @param {*} name 
  */
 export const findTempCode = (list, name) => {
-  const currentArr = _.find(list, { 'name': name});
-  return currentArr.code;
+  const currentArr = _.find(list, { 'com_name': name});
+  return JSON.parse(currentArr.com_code);
 }

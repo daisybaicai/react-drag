@@ -1,5 +1,5 @@
-import { getPageCode, putPageCode } from "../services/api";
-import { message } from "antd";
+import { getPageCode, putPageCode, createComponent, getOwnTemplate } from '../services/api';
+import { message } from 'antd';
 
 const SettingModel = {
   namespace: 'drag',
@@ -11,11 +11,11 @@ const SettingModel = {
         props: {
           style: {
             border: '1px solid red',
-            width: '200px'
+            width: '200px',
           },
         },
-        children: []
-      }
+        children: [],
+      },
     ],
     config: {},
     templateList: [],
@@ -25,7 +25,7 @@ const SettingModel = {
       const response = yield call(getPageCode);
       if (response) {
         let payload = response.data.code;
-        payload = eval("("+payload+")");
+        payload = eval('(' + payload + ')');
         yield put({
           type: 'saveCurrentView',
           payload,
@@ -34,16 +34,10 @@ const SettingModel = {
         message.error(response.msg);
       }
     },
-    *putPageCode({payload}, {call, put}) {
+    *putPageCode({ payload }, { call, put }) {
       const response = yield call(putPageCode, payload);
       if (response) {
-        // let payload = response.data.code;
-        // payload = eval("("+payload+")");
-        // yield put({
-        //   type: 'saveCurrentView',
-        //   payload,
-        // });
-        message.success('res', response)
+        message.success('res', response);
       } else {
         message.error(response.msg);
       }
@@ -60,11 +54,24 @@ const SettingModel = {
         payload,
       });
     },
-    *setTemplateList({ payload }, { _, put }) {
-      yield put({
-        type: 'saveTemplateList',
-        payload,
-      });
+    *setTemplateList({ payload }, { call, put }) {
+      const response = yield call(createComponent, payload);
+      if (response && response.code == 200) {
+        message.success(response.msg);
+      } else {
+        message.error(response.msg);
+      }
+    },
+    *getOwnTemplate(_, { call, put }) {
+      const response = yield call(getOwnTemplate);
+      if (response && response.code == 200) {
+        yield put({
+          type: 'saveTemplateList',
+          payload: response.data,
+        });
+      } else {
+        message.error(response.msg);
+      }
     },
   },
   reducers: {
@@ -78,8 +85,7 @@ const SettingModel = {
       return { ...state, config };
     },
     saveTemplateList(state, { payload }) {
-      const newList = [...state.templateList, { ...payload }];
-      return { ...state, templateList: newList };
+      return { ...state, templateList: payload };
     },
   },
 };
