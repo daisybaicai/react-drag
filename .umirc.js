@@ -1,12 +1,24 @@
 
 // ref: https://umijs.org/config/
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
+
+
+const chainWebpack = (config, { webpack }) => {
+  config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+      {
+        language: ['json', 'html', 'javascript', 'typescript']
+      }
+  ])
+};
+
 export default {
   treeShaking: true,
+  publicPath: './',
   routes: [
     {
       path: '/',
       routes: [
-        // { path: '/', component: '../pages/index' },
+        { path: '/', redirect: '/login' },
         { path: '/drag', component: '../pages/DragView'},
         { path: '/codePreview', component: '../pages/codePreview'},
         { path: '/login', component: '../pages/login'},
@@ -22,7 +34,6 @@ export default {
       dynamicImport: { webpackChunkName: true },
       title: '前端可视化-reactDrag',
       dll: false,
-      
       routes: {
         exclude: [
           /models\//,
@@ -41,4 +52,5 @@ export default {
       'pathRewrite': { '^/api' : '' },
     },
   },
+  chainWebpack
 }

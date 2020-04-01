@@ -15,6 +15,13 @@ const Router = routerRedux.ConnectedRouter;
 const routes = [
   {
     path: '/',
+    redirect: '/login',
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/',
     routes: [
       {
         path: '/drag',

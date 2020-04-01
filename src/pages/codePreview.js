@@ -3,6 +3,26 @@ import MonacoEditor from 'react-monaco-editor';
 import { connect } from 'dva';
 import _ from 'loadsh';
 import { message } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import {
+  Button,
+  Tag,
+  NavBar,
+  Icon,
+  InputItem,
+  SearchBar,
+  Result,
+} from 'antd-mobile';
+
+const GlobalComponent = {
+  Button,
+  Tag,
+  NavBar,
+  Icon,
+  InputItem,
+  SearchBar,
+  Result,
+};
 
 const codePreview = props => {
   const { dispatch, currentView } = props;
@@ -55,7 +75,11 @@ const codePreview = props => {
         super();
       }
       render(){
-        return ${renderDom(currentView)}
+        return (
+          <>
+              ${renderDom(currentView, 0)}
+          </>
+        )
       }
     }
     export default Index;
@@ -66,22 +90,31 @@ const codePreview = props => {
    * @description 渲染jsx dom
    * @param {*} data 视图数据
    */
-  const renderDom = data => {
+  const renderDom = (data, flag) => {
     let result = ``;
     data.map(item => {
       if (item.children) {
         result += `
           <${item.type} ${renderStyle(item.props.style)}>
-            ${renderDom(item.children)}
-          </${item.type}>
+          ${renderDom(item.children, 1)}</${item.type}>
           `;
       } else {
         const { props, nodeProps } = item;
-        result += `<${item.type} ${renderProps(props)} ${renderNodeProps(
+        if (flag) {
+          result += `    <${item.type}${renderProps(props)} ${renderNodeProps(
             nodeProps,
-          )}${renderStyle(props.style)}>${props.content ? props.content : ''}</${
-            item.type
-          }>`;
+          )}${renderStyle(props.style)}>${
+            props.content ? props.content : ''
+          }</${item.type}>
+          `;
+        } else {
+          result += `<${item.type}${renderProps(props)} ${renderNodeProps(
+            nodeProps,
+          )}${renderStyle(props.style)}>${
+            props.content ? props.content : ''
+          }</${item.type}>
+          `;
+        }
       }
     });
     return result;
@@ -126,10 +159,10 @@ const codePreview = props => {
     for (const key in style) {
       if (style.hasOwnProperty(key) && key != 'border' && style[key]) {
         const value = style[key];
-        styleResult += `"${key}": "${value}"`;
+        styleResult += `${key}: '${value}'`;
       }
     }
-    return styleResult ? `style={{${styleResult}}}}` : ``;
+    return styleResult ? `style={{ ${styleResult} }}` : ``;
   };
 
   useEffect(() => {
@@ -142,11 +175,64 @@ const codePreview = props => {
     }
   }, [currentView]);
 
+  const renderView = (data, index) => {
+    return data.map((item, i) => {
+      // index
+      const indexs = index === '' ? String(i) : `${index}-${i}`;
+
+      // 渲染，有子元素的嵌套的
+      if (item.children) {
+        let { props: style = {} } = item;
+        return (
+          <div style={style.style} data-id={indexs} key={_.uniqueId()}>
+            {item.children.length > 0
+              ? renderView(item.children, indexs)
+              : null}
+          </div>
+        );
+      }
+      const Comp = GlobalComponent[item.type];
+      // 具有特殊属性(ReactNode)
+      let ReactNodeProps = {};
+      if (item.nodeProps) {
+        const nodeProps = item.nodeProps;
+        for (const key in nodeProps) {
+          const func = nodeProps[key].renderFunc;
+          const params = nodeProps[key].params;
+          ReactNodeProps[key] = func(params);
+        }
+      }
+      let props = {
+        'data-id': indexs,
+        key: _.uniqueId(),
+        ...item.props,
+        ...ReactNodeProps,
+      };
+      if (item.needDiv == true) {
+        return (
+          <div data-id={indexs} key={_.uniqueId()}>
+            {React.createElement(
+              Comp,
+              props,
+              item.props.content ? item.props.content : null,
+            )}
+          </div>
+        );
+      } else {
+        return React.createElement(
+          Comp,
+          props,
+          item.props.content ? item.props.content : null,
+        );
+      }
+    });
+  };
+
   const options = {
     selectOnLineNumbers: true,
   };
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
       <MonacoEditor
         width="800"
         height="600"
@@ -155,6 +241,24 @@ const codePreview = props => {
         value={code}
         options={options}
       />
+      <CopyToClipboard
+        text={code}
+        onCopy={() => {
+          message.success('复制成功');
+        }}
+      >
+        <span>复制代码</span>
+      </CopyToClipboard>
+      <div
+        style={{
+          width: '375px',
+          height: '667px',
+          backgroundColor: 'white',
+          margin: '20px',
+        }}
+      >
+        {renderView(currentView, 0)}
+      </div>
     </div>
   );
 };
