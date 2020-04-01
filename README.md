@@ -8,7 +8,7 @@
 
 ## 效果展示
 
-![主页效果](https://github.com/daisybaicai/react-drag/tree/master/docs/index.png)
+![主页效果](https://github.com/daisybaicai/react-drag/blob/master/docs/index.png)
 
 ## 功能
 - 基本拖拽
