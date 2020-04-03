@@ -108,6 +108,14 @@ const IndexView = props => {
     });
   };
 
+
+  /**
+   * @description 跳转代码广场
+   */
+  const comSquare = () => {
+    dispatch(routerRedux.push('/comsquare'));
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.LeftContainer}>
@@ -115,6 +123,10 @@ const IndexView = props => {
           <div className={styles.btnList}>
             <div className={styles.logo}>React-Drag</div>
             <div className={styles.operation}>
+            <div className={styles.btn} onClick={comSquare}>
+                <TeamOutlined style={{ fontSize: '22px' }} />
+                组件广场
+              </div>
               <div className={styles.btn} onClick={createOrginzation}>
                 <TeamOutlined style={{ fontSize: '22px' }} />
                 新建组织

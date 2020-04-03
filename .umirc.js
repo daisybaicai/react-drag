@@ -23,6 +23,7 @@ export default {
         { path: '/codePreview', component: '../pages/codePreview'},
         { path: '/login', component: '../pages/login'},
         { path: '/register', component: '../pages/register'},
+        { path: '/comsquare', component: '../pages/componentSquare'},
       ]
     }
   ],

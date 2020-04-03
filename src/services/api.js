@@ -78,3 +78,24 @@ export async function createComponent(params) {
 export async function getOwnTemplate() {
   return request('/api/component');
 }
+
+/**
+ * @description 获取个人组件列表
+ */
+export async function getPersonalComponents() {
+  return request('/api/component/personal');
+}
+
+/**
+ * @description 获取公共组件列表
+ */
+export async function getPublicComponents() {
+  return request('/api/component/public');
+}
+
+/**
+ * @description 获取组织组件列表
+ */
+export async function getOrginzationComponents() {
+  return request('/api/component/orginzation');
+}
