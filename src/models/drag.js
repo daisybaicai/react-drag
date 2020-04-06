@@ -48,6 +48,15 @@ const SettingModel = {
         payload,
       });
     },
+    *removeCurrentView({ payload }, { _, put }) {
+      yield put({
+        type: 'saveCurrentView',
+        payload,
+      });
+      yield put({
+        type: 'clearArrIndex'
+      })
+    },
     *setConfig({ payload }, { _, put }) {
       yield put({
         type: 'saveConfig',
@@ -87,6 +96,11 @@ const SettingModel = {
     saveTemplateList(state, { payload }) {
       return { ...state, templateList: payload };
     },
+    clearArrIndex(state, _) {
+      const config = state.config;
+      config.arrIndex = '';
+      return {...state, config: config};
+    }
   },
 };
 export default SettingModel;

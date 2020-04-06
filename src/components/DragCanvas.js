@@ -19,10 +19,11 @@ import {
   itemRemove,
   findItemObject,
   isTemporCom,
-  findTempCode
+  findTempCode,
 } from '../utils/utils';
 import componetList from '../pages/config';
 import { connect } from 'dva';
+import './drag.less';
 
 const sortableOption = {
   animation: 150,
@@ -181,19 +182,33 @@ const DragCanvas = props => {
         border: '1px dashed red',
       };
       const isSelect = indexs === selectIndex ? isSelectClass : {};
+      let selectClass = indexs === selectIndex ? 'selectDrag' : 'unselectDrag';
       // 渲染，有子元素的嵌套的
       if (item.children) {
         let { props: style = {} } = item;
         let draggable = {
-          border: '1px dashed black',
+          // border: '1px dashed black',
         };
         let mergestyle = Object.assign({}, style.style, draggable, isSelect);
+        let divprops = {
+          style: mergestyle,
+          'data-id': indexs,
+          key: _.uniqueId()
+        }
+        if (selectClass) {
+          divprops = {
+            ...divprops,
+            className: selectClass,
+          }
+        }
         return (
-          <div style={mergestyle} data-id={indexs} key={_.uniqueId()}>
+          React.createElement(
+            'div',
+            divprops,
             <Sortable
               style={{
                 minHeight: 50,
-                margin: 10,
+                // margin: 10,
               }}
               key={_.uniqueId()}
               // ref={c => c && (sortable = c.sortable)}
@@ -206,8 +221,8 @@ const DragCanvas = props => {
               {item.children.length > 0
                 ? renderView(item.children, indexs)
                 : null}
-            </Sortable>
-          </div>
+            </Sortable>,
+          )
         );
       }
       const Comp = GlobalComponent[item.type];
@@ -227,9 +242,15 @@ const DragCanvas = props => {
         ...item.props,
         ...ReactNodeProps,
       };
+      if (selectClass) {
+        props = {
+          ...props,
+          className: selectClass,
+        };
+      }
       if (item.needDiv == true) {
         let draggable = {
-          border: '1px dashed blue',
+          // border: '1px dashed blue',
         };
         let mergestyle = Object.assign({}, draggable, isSelect);
         return (
@@ -267,6 +288,7 @@ const DragCanvas = props => {
         backgroundColor: 'white',
         margin: '20px',
       }}
+      className="dragContainer"
     >
       <Sortable
         options={{

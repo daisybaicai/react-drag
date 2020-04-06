@@ -99,3 +99,13 @@ export async function getPublicComponents() {
 export async function getOrginzationComponents() {
   return request('/api/component/orginzation');
 }
+
+/**
+ * @description 上传图片
+ */
+export async function uploadFiles(params) {
+  return request('/api/component/img', {
+    method: 'POST',
+    body: params
+  })
+}

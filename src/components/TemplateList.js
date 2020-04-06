@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sortable from 'react-sortablejs';
 import _ from 'loadsh';
-import { Tag, Button } from 'antd-mobile';
 import { connect } from 'dva';
 
 const sortableOption = {
@@ -24,12 +23,16 @@ const TemplateList = props => {
   }, [props.templateList]);
 
   const renderComponent = data => {
-    console.log('data', data);
     return data.map(item => {
       return (
-        <div key={_.uniqueId()} data-id={`com-${item.com_name}`}>
-          <Tag>{item.com_name}</Tag>
-        </div>
+        <>
+          <div style={{ fontSize: '14px', fontWeight: '700', color: '#595959' }} key={_.uniqueId()}>
+            {item.com_name}
+          </div>
+          <span data-id={`com-${item.com_name}`} key={_.uniqueId()} className="item" style={{ border: '1px dashed #b9b9b9', marginBottom: '4px', cursor: 'move', padding: '4px', display: 'block'}}>
+            <img src={item.file_path} width="200px"/>
+          </span>
+        </>
       );
     });
   };
