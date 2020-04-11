@@ -25,6 +25,7 @@ export default {
         { path: '/register', component: '../pages/register'},
         { path: '/comsquare', component: '../pages/componentSquare'},
         { path: '/:id/componentDrag', component: '../pages/componentDrag'},
+        { path: '/notification', component: '../pages/Notification'},
       ]
     }
   ],

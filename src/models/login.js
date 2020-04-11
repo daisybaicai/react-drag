@@ -9,13 +9,14 @@ export default {
 
   state: {
     status: undefined,
+    currentUser: {},
   },
 
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
       if (response && response.code == 200) {
-        const { token }  = response.data;
+        const { token } = response.data;
         localStorage.removeItem(`${config.projectName}-Token`);
         localStorage.setItem(`${config.projectName}-Token`, token);
         message.success('登陆成功');
@@ -31,6 +32,10 @@ export default {
       } else {
         message.error(response.msg || '注册失败，请重新注册');
       }
+    },
+    *logout(_, { put }) {
+      localStorage.removeItem(`${config.projectName}-Token`);
+      yield put(routerRedux.replace('/login'));
     },
   },
 
