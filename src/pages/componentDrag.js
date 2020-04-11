@@ -13,9 +13,10 @@ import {
   HighlightOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Tabs, Input, Modal, Form } from 'antd';
+import { Tabs, Input, Modal, Form, message } from 'antd';
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+const { confirm } = Modal;
 
 const IndexView = props => {
   const { dispatch, componentView, form, match } = props;
@@ -59,14 +60,61 @@ const IndexView = props => {
    * @description 发送到服务器
    */
   const postToServer = () => {
-    console.log('componentView', componentView);
-    dispatch({
-      type: 'drag/putComponentCode',
-      payload: {
-        id: params.id,
-        code: componentView,
+    if (componentValidator(componentView)) {
+      dispatch({
+        type: 'drag/putComponentCode',
+        payload: {
+          id: params.id,
+          code: componentView,
+        },
+      });
+    }
+  };
+
+  const basicObj = {
+    type: 'div',
+    nested: true,
+    props: {
+      style: {
+        height: '',
+        width: '',
+        marginTop: '',
       },
-    });
+    },
+    needDiv: false,
+    children: [],
+  };
+  // 组件不能为空
+  const componentValidator = componentView => {
+    if (componentView.length === 0) {
+      // 提示不能为空
+      message.error('组件不能为空');
+      return false;
+    } else if (componentView.length === 1) {
+      return true;
+    } else {
+      confirm({
+        title: '组件必须在被包裹在一个根组件下,是否自动生成外层根组件包裹?',
+        content: '当你点击ok，自动生成包裹根组件',
+        okText: '确认',
+        cancelText: '取消',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            // dispatch
+            const basic = basicObj;
+            basic.children = componentView;
+            dispatch({
+              type: 'drag/setCurrentView',
+              payload: [basic],
+              isPage: false,
+            });
+            setTimeout(resolve, 1000);
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {},
+      });
+      return false;
+    }
   };
 
   /**

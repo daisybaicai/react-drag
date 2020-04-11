@@ -54,6 +54,7 @@ const card = (props) => {
           visible={visible}
           onOk={handleOk}
           onCancel={handleCancel}
+          footer = {null}
         >
           <div >
             <img style={{ width: '400px' }} src={file_path} />

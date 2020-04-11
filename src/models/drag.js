@@ -1,4 +1,11 @@
-import { getPageCode, putPageCode, createComponent, getOwnTemplate, getComponentCode ,putComponentCode} from '../services/api';
+import {
+  getPageCode,
+  putPageCode,
+  createComponent,
+  getOwnTemplate,
+  getComponentCode,
+  putComponentCode,
+} from '../services/api';
 import { message } from 'antd';
 
 const SettingModel = {
@@ -36,15 +43,11 @@ const SettingModel = {
         message.error(response.msg);
       }
     },
-    *getComponentCode({ payload } , { call, put }) {
+    *getComponentCode({ payload }, { call, put }) {
       const response = yield call(getComponentCode, payload.id);
       if (response && response.code == 200) {
         let payload = response.data.code;
-        if(payload.startsWith('[')) {
-          payload = eval('(' + `${payload}` + ')');
-        } else {
-          payload = eval('(' + `[${payload}]` + ')');
-        }
+        payload = eval('(' + `[${payload}]` + ')');
         yield put({
           type: 'saveComponentView',
           payload,
@@ -55,7 +58,7 @@ const SettingModel = {
     },
     *putComponentCode({ payload }, { call, put }) {
       const { id, code } = payload;
-      const response = yield call(putComponentCode, payload, id);
+      const response = yield call(putComponentCode, { code: code[0] }, id);
       if (response) {
         message.success('res', response);
       } else {
@@ -71,7 +74,7 @@ const SettingModel = {
       }
     },
     *setCurrentView({ payload, isPage }, { _, put }) {
-      if(isPage) {
+      if (isPage) {
         yield put({
           type: 'saveCurrentView',
           payload,
@@ -84,27 +87,26 @@ const SettingModel = {
       }
     },
     *removeCurrentView({ payload, isPage }, { _, put }) {
-      if(isPage) {
+      if (isPage) {
         yield put({
           type: 'saveCurrentView',
           payload,
         });
         yield put({
-          type: 'clearArrIndex'
-        })
+          type: 'clearArrIndex',
+        });
       } else {
         yield put({
           type: 'saveComponentView',
           payload,
         });
         yield put({
-          type: 'clearComArrIndex'
-        })
+          type: 'clearComArrIndex',
+        });
       }
     },
     *setConfig({ payload, isPage }, { _, put }) {
-      console.log('ispage', isPage);
-      if(isPage) {
+      if (isPage) {
         yield put({
           type: 'saveConfig',
           payload,
@@ -162,12 +164,12 @@ const SettingModel = {
     clearArrIndex(state, _) {
       const config = state.config;
       config.arrIndex = '';
-      return {...state, config: config};
+      return { ...state, config: config };
     },
     clearComArrIndex(state, _) {
       const config = state.componentConfig;
       config.arrIndex = '';
-      return {...state, componentConfig: config};
+      return { ...state, componentConfig: config };
     },
   },
 };
