@@ -5,7 +5,7 @@ export default {
   nested: true,
   props: {
     style: {
-      border: '1px solid black',
+      // border: '1px solid black',
       height: '100px',
       width: '',
       marginTop: '',

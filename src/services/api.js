@@ -78,3 +78,52 @@ export async function createComponent(params) {
 export async function getOwnTemplate() {
   return request('/api/component');
 }
+
+/**
+ * @description 获取个人组件列表
+ */
+export async function getPersonalComponents() {
+  return request('/api/component/personal');
+}
+
+/**
+ * @description 获取公共组件列表
+ */
+export async function getPublicComponents() {
+  return request('/api/component/public');
+}
+
+/**
+ * @description 获取组织组件列表
+ */
+export async function getOrginzationComponents() {
+  return request('/api/component/orginzation');
+}
+
+/**
+ * @description 上传图片
+ */
+export async function uploadFiles(params) {
+  return request('/api/component/img', {
+    method: 'POST',
+    body: params
+  })
+}
+
+/**
+ * @description 获取当前用户的componentCode
+ */
+export async function getComponentCode(id) {
+  return request(`/api/component/${id}`);
+}
+
+/**
+ * @description 更新当前用户的componentCode
+ * @param {*} params {currentView}
+ */
+export async function putComponentCode(params, id) {
+  return request(`/api/component/${id}`, {
+    method: 'PUT',
+    body: params
+  });
+}
