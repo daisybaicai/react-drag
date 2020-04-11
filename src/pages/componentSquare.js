@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styles from './square.less';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { UserOutlined } from '@ant-design/icons';
 import { Tabs, Input, Form, Card, Avatar } from 'antd';
+import {
+  HighlightOutlined,
+  UserOutlined,
+  AppstoreOutlined
+} from '@ant-design/icons';
 const { TabPane } = Tabs;
 const { Meta } = Card;
 import MyCard from '../components/Card';
@@ -25,13 +29,30 @@ const IndexView = props => {
     });
   }, []);
 
+
+  /**
+   * @description 跳转页面编辑
+   */
+  const PageJump = () => {
+    dispatch(routerRedux.push('/drag'));
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.LeftContainer}>
         <div className={styles.header}>
           <div className={styles.btnList}>
             <div className={styles.logo}>React-Drag</div>
-            <div className={styles.operation}>组件广场</div>
+            <div className={styles.operation}>
+              <div className={styles.btn} style={{color: '#1890ff'}}>
+                <AppstoreOutlined style={{ fontSize: '22px' }} />
+                  组件广场
+              </div>
+              <div className={styles.btn} onClick={PageJump}>
+                <HighlightOutlined style={{ fontSize: '22px' }} />
+                  页面编辑
+              </div>
+            </div>
             <div className={styles.userCenter}>
               <div className={styles.btn}>
                 <UserOutlined style={{ fontSize: '22px' }} />
@@ -42,7 +63,6 @@ const IndexView = props => {
         </div>
         <div className={styles.content}>
           <div className={styles.editRegion}>
-            <div className={styles.ComponentList}>组件广场</div>
             <div className={styles.dragRegion}>
               <Tabs>
                 <TabPane tab="个人组件" key="1">

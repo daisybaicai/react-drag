@@ -19,9 +19,10 @@
       box-shadow: 0 2px 8px #f0f1f2;
 
       .logo {
-        font-family: "Gill Sans", sans-serif;
+        font-family: 'Gill Sans', sans-serif;
         font-size: 32px;
         width: 300px;
+        padding-left: 40px;
       }
       .btnList {
         display: flex;
@@ -44,7 +45,7 @@
             padding: 0px 10px;
           }
         }
-        .userCenter{
+        .userCenter {
           display: flex;
           .btn {
             display: flex;
@@ -67,7 +68,11 @@
       display: flex;
       -webkit-box-flex: 1;
       flex-grow: 1;
-      height: 100%;
+      height: calc(100% - 84px);
+      border: 1px solid #1890ff;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 20px 40px;
 
       .settings {
         display: flex;
@@ -76,7 +81,7 @@
         justify-content: space-between;
         width: 40px;
         z-index: 1;
-        background-color: whitesmoke;
+        background-color: white;
         border-right: 1px solid rgb(221, 221, 221);
         span {
           display: flex;
@@ -99,7 +104,7 @@
         .ComponentList {
           display: flex;
           flex-direction: column;
-          background-color: whitesmoke;
+          background-color: white;
           position: relative;
           width: 300px;
           height: 100%;
@@ -117,7 +122,6 @@
           overflow: auto;
           justify-content: center;
           align-items: center;
-          background-color: gray;
         }
       }
 
@@ -135,7 +139,7 @@
           justify-content: center;
           align-items: center;
           font-size: 24px;
-          color: #2C88F8;
+          color: #2c88f8;
         }
       }
     }
@@ -143,8 +147,10 @@
     .footer {
       display: flex;
       height: 30px;
-      background-color: whitesmoke;
+      background-color: white;
       border-top: 1px solid rgb(221, 221, 221);
+      justify-content: center;
+      align-items: center;
     }
   }
 }

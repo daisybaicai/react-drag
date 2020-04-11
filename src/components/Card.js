@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import styles from './card.less';
 import { Modal, Button } from 'antd';
+import { routerRedux } from 'dva/router';
+import { connect } from 'dva';
 
-export default function(props) {
-  const { info } = props;
-  const { com_name, com_description, file_path } = info;
+const card = (props) => {
+  const { info, dispatch } = props;
+  const { com_name, com_description, file_path,id } = info;
 
   const [visible, setVisible] = useState(false);
 
@@ -20,14 +22,18 @@ export default function(props) {
     setVisible(false);
   };
 
+  const PageJumpToDetail = () => {
+    dispatch(routerRedux.push(`/${id}/componentDrag`));
+  }
+
   return (
     <div style={{ width: '200px', marginRight: '20px' }}>
       <div className={styles.container}>
         <img style={{ width: '100px' }} src={file_path} />
       </div>
       <div style={{ padding: '24px' }}>
-        <h4>组件名称 {com_name}</h4>
-        <p>组件描述 {com_description}</p>
+        <h4>{com_name}</h4>
+        <div style={{ height: '50px'}}>{com_description}</div>
       </div>
       <div>
         <div
@@ -38,11 +44,11 @@ export default function(props) {
             display: 'flex',
           }}
         >
-          <span style={{ flex: 1 }}>更新</span>
-          <span style={{ flex: 1 }} onClick={showModal}>
+          <span style={{ flex: 1, textAlign: 'center' }} onClick={PageJumpToDetail}>更新</span>
+          <span style={{ flex: 1, textAlign: 'center' }} onClick={showModal}>
             预览
           </span>
-          <span style={{ flex: 1 }}>设置</span>
+          <span style={{ flex: 1, textAlign: 'center' }}>设置</span>
         </div>
         <Modal
           visible={visible}
@@ -57,3 +63,5 @@ export default function(props) {
     </div>
   );
 }
+
+export default connect(({}) => ({}))(card);

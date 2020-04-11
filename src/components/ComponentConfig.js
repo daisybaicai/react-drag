@@ -13,8 +13,12 @@ const { Panel } = Collapse;
 const Config = props => {
   const [visible, setVisible] = useState(false);
   const [showOrginzation, setShowOrginzation] = useState(false);
-  const { config, currentView, dispatch, form, orgArr } = props;
+
+  const { pageConfig,currentPageView,currentComponentView,componentConfig, dispatch, form, orgArr, isPage } = props;
   const { getFieldDecorator } = form;
+
+  const config = isPage ? pageConfig: componentConfig;
+  const currentView = isPage ? currentPageView : currentComponentView;
 
   const [imgBlob, setImgBlob] = useState(null);
   const [imgSrc, setImgSrc] = useState(defaultPng);
@@ -159,10 +163,11 @@ const Config = props => {
     }
     // setConfig
     dispatch({
-      type: 'drag/saveConfig',
+      type: 'drag/setConfig',
       payload: {
         propsInfo: data,
       },
+      isPage
     });
 
     dragItem.props = data;
@@ -176,6 +181,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -199,10 +205,11 @@ const Config = props => {
 
     // setConfig
     dispatch({
-      type: 'drag/saveConfig',
+      type: 'drag/setConfig',
       payload: {
         nodePropsInfo: data,
       },
+      isPage,
     });
 
     // 对应渲染到页面上
@@ -217,6 +224,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -229,6 +237,7 @@ const Config = props => {
     dispatch({
       type: 'drag/removeCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -245,6 +254,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -365,14 +375,17 @@ const Config = props => {
       <Button onClick={RemoveComponent} icon="delete" size="small">
         删除组件
       </Button>
-      <Button onClick={GenerateTemplate} icon="edit" size="small">
+      {
+        isPage ? 
+        <Button onClick={GenerateTemplate} icon="edit" size="small">
         生成模版
-      </Button>
+      </Button> : null
+      }
       <Collapse defaultActiveKey={['样式', '主题', '文字内容']}>
         {renderConfig(config.propsConfig, 'props')}
         {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
       </Collapse>
-      <Modal
+      { isPage? <Modal
         width="50%"
         title="生成模版"
         visible={visible}
@@ -435,12 +448,15 @@ const Config = props => {
           </Form>
         </div>
       </Modal>
+      : null}
     </div>
   );
 };
 
-export default connect(({ drag, orginzation, components }) => ({
-  config: drag.config,
-  currentView: drag.currentView,
+export default connect(({ drag, orginzation }) => ({
+  pageConfig: drag.config,
+  currentPageView: drag.currentView,
   orgArr: orginzation.orgArr,
+  currentComponentView: drag.componentView,
+  componentConfig: drag.componentConfig,
 }))(Form.create()(Config));

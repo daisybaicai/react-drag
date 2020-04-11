@@ -109,3 +109,21 @@ export async function uploadFiles(params) {
     body: params
   })
 }
+
+/**
+ * @description 获取当前用户的componentCode
+ */
+export async function getComponentCode(id) {
+  return request(`/api/component/${id}`);
+}
+
+/**
+ * @description 更新当前用户的componentCode
+ * @param {*} params {currentView}
+ */
+export async function putComponentCode(params, id) {
+  return request(`/api/component/${id}`, {
+    method: 'PUT',
+    body: params
+  });
+}

@@ -32,6 +32,6 @@ const renderComponent = data => {
 
 export default function ComponentList() {
   return (
-    <Sortable options={sortOptions}>{renderComponent(componentList)}</Sortable>
+      <Sortable options={sortOptions}>{renderComponent(componentList)}</Sortable>
   );
 }

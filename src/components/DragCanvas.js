@@ -58,14 +58,17 @@ const GlobalComponent = {
   Result,
 };
 
+
 const DragCanvas = props => {
-  const { dispatch, currentView, selectIndex, templateList } = props;
+  const { dispatch, currentPageView, pageSelectIndex, templateList, isPage, currentComponentView,componentSelectIndex } = props;
   // useEffect(() => {
   //   dispatch({
   //     type: 'drag/setCurrentView',
   //     payload
   //   })
   // }, [currentView])
+  const currentView = isPage ? currentPageView : currentComponentView;
+  const selectIndex = isPage ? pageSelectIndex : componentSelectIndex;
 
   // 拖拽的排序方法,同级拖拽通过update
   const onUpdate = evt => {
@@ -78,6 +81,7 @@ const DragCanvas = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newData,
+      isPage,
     });
   };
 
@@ -99,6 +103,7 @@ const DragCanvas = props => {
         dispatch({
           type: 'drag/setCurrentView',
           payload: newTreeData2,
+          isPage,
         });
         return;
       }
@@ -109,6 +114,7 @@ const DragCanvas = props => {
       dispatch({
         type: 'drag/setCurrentView',
         payload: newData,
+        isPage,
       });
       return;
     }
@@ -123,6 +129,7 @@ const DragCanvas = props => {
       dispatch({
         type: 'drag/setCurrentView',
         payload: newData,
+        isPage,
       });
       return;
     }
@@ -133,6 +140,7 @@ const DragCanvas = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newData,
+      isPage,
     });
   };
 
@@ -169,6 +177,7 @@ const DragCanvas = props => {
     dispatch({
       type: 'drag/setConfig',
       payload,
+      isPage,
     });
   };
 
@@ -218,7 +227,8 @@ const DragCanvas = props => {
                 onUpdate: evt => onUpdate(evt),
               }}
             >
-              {item.children.length > 0
+                {
+              item.children.length > 0
                 ? renderView(item.children, indexs)
                 : null}
             </Sortable>,
@@ -271,6 +281,7 @@ const DragCanvas = props => {
           },
         });
 
+        console.log('itemprops', item);
         return React.createElement(
           Comp,
           MergeProps,
@@ -306,7 +317,9 @@ const DragCanvas = props => {
 };
 
 export default connect(({ drag }) => ({
-  currentView: drag.currentView,
-  selectIndex: drag.config.arrIndex,
+  currentPageView: drag.currentView,
+  pageSelectIndex: drag.config.arrIndex,
   templateList: drag.templateList,
+  currentComponentView: drag.componentView,
+  componentSelectIndex: drag.componentConfig.arrIndex,
 }))(DragCanvas);

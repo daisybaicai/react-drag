@@ -1,4 +1,4 @@
-import { getPageCode, putPageCode, createComponent, getOwnTemplate } from '../services/api';
+import { getPageCode, putPageCode, createComponent, getOwnTemplate, getComponentCode ,putComponentCode} from '../services/api';
 import { message } from 'antd';
 
 const SettingModel = {
@@ -18,6 +18,8 @@ const SettingModel = {
       },
     ],
     config: {},
+    componentView: [],
+    componentConfig: {},
     templateList: [],
   },
   effects: {
@@ -34,6 +36,32 @@ const SettingModel = {
         message.error(response.msg);
       }
     },
+    *getComponentCode({ payload } , { call, put }) {
+      const response = yield call(getComponentCode, payload.id);
+      if (response && response.code == 200) {
+        let payload = response.data.code;
+        if(payload.startsWith('[')) {
+          payload = eval('(' + `${payload}` + ')');
+        } else {
+          payload = eval('(' + `[${payload}]` + ')');
+        }
+        yield put({
+          type: 'saveComponentView',
+          payload,
+        });
+      } else {
+        message.error(response.msg);
+      }
+    },
+    *putComponentCode({ payload }, { call, put }) {
+      const { id, code } = payload;
+      const response = yield call(putComponentCode, payload, id);
+      if (response) {
+        message.success('res', response);
+      } else {
+        message.error(response.msg);
+      }
+    },
     *putPageCode({ payload }, { call, put }) {
       const response = yield call(putPageCode, payload);
       if (response) {
@@ -42,26 +70,51 @@ const SettingModel = {
         message.error(response.msg);
       }
     },
-    *setCurrentView({ payload }, { _, put }) {
-      yield put({
-        type: 'saveCurrentView',
-        payload,
-      });
+    *setCurrentView({ payload, isPage }, { _, put }) {
+      if(isPage) {
+        yield put({
+          type: 'saveCurrentView',
+          payload,
+        });
+      } else {
+        yield put({
+          type: 'saveComponentView',
+          payload,
+        });
+      }
     },
-    *removeCurrentView({ payload }, { _, put }) {
-      yield put({
-        type: 'saveCurrentView',
-        payload,
-      });
-      yield put({
-        type: 'clearArrIndex'
-      })
+    *removeCurrentView({ payload, isPage }, { _, put }) {
+      if(isPage) {
+        yield put({
+          type: 'saveCurrentView',
+          payload,
+        });
+        yield put({
+          type: 'clearArrIndex'
+        })
+      } else {
+        yield put({
+          type: 'saveComponentView',
+          payload,
+        });
+        yield put({
+          type: 'clearComArrIndex'
+        })
+      }
     },
-    *setConfig({ payload }, { _, put }) {
-      yield put({
-        type: 'saveConfig',
-        payload,
-      });
+    *setConfig({ payload, isPage }, { _, put }) {
+      console.log('ispage', isPage);
+      if(isPage) {
+        yield put({
+          type: 'saveConfig',
+          payload,
+        });
+      } else {
+        yield put({
+          type: 'saveComponentConfig',
+          payload,
+        });
+      }
     },
     *setTemplateList({ payload }, { call, put }) {
       const response = yield call(createComponent, payload);
@@ -87,11 +140,21 @@ const SettingModel = {
     saveCurrentView(state, { payload }) {
       return { ...state, currentView: payload };
     },
+    saveComponentView(state, { payload }) {
+      return { ...state, componentView: payload };
+    },
     saveConfig(state, { payload }) {
       const config = Object.assign({}, state.config, {
         ...payload,
       });
       return { ...state, config };
+    },
+    saveComponentConfig(state, { payload }) {
+      const componentConfig = Object.assign({}, state.componentConfig, {
+        ...payload,
+      });
+      console.log('com', componentConfig);
+      return { ...state, componentConfig };
     },
     saveTemplateList(state, { payload }) {
       return { ...state, templateList: payload };
@@ -100,7 +163,12 @@ const SettingModel = {
       const config = state.config;
       config.arrIndex = '';
       return {...state, config: config};
-    }
+    },
+    clearComArrIndex(state, _) {
+      const config = state.componentConfig;
+      config.arrIndex = '';
+      return {...state, componentConfig: config};
+    },
   },
 };
 export default SettingModel;
