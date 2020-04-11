@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Input, Select, Button, Modal, Form, Collapse } from 'antd';
+import { Input, Select, Button, Modal, Form, Collapse, Spin } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
@@ -22,6 +22,7 @@ const Config = props => {
 
   const [imgBlob, setImgBlob] = useState(null);
   const [imgSrc, setImgSrc] = useState(defaultPng);
+  const [imgLoading, setImgLoading] = useState(true);
   /**
    * @description 配置项的渲染组件
    * @param {*} data 该配置项的数据结构
@@ -295,6 +296,7 @@ const Config = props => {
    * @description 生成模版
    */
   const GenerateTemplate = () => {
+    setImgSrc(defaultPng);
     const dragContainer = document.getElementsByClassName('selectDrag')[0];
     const opts = {
       logging: false,
@@ -309,7 +311,11 @@ const Config = props => {
         const blob = convertBase64UrlToBlob(base64);
         // console.log('blob', blob);
         setImgBlob(blob);
-        setImgSrc(img.src);
+        console.log('img', img);
+        if(img) {
+          setImgSrc(img.src);
+          setImgLoading(false);
+        }
       });
     });
     setVisible(true);
@@ -437,13 +443,16 @@ const Config = props => {
               })(<Input />)}
             </Form.Item>
             <Form.Item label="图片">
-              <img
-                id="myid"
-                src={imgSrc}
-                width="200px"
-                height="200px"
-                alt="图片模版预览"
-              />
+              <div>
+                <Spin spinning={imgLoading}>
+                  <img
+                    id="myid"
+                    src={imgSrc}
+                    width="300px"
+                    alt="图片模版预览"
+                  />
+                </Spin>
+              </div>
             </Form.Item>
           </Form>
         </div>
