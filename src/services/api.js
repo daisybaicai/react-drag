@@ -127,3 +127,21 @@ export async function putComponentCode(params, id) {
     body: params
   });
 }
+
+/**
+ * @description 获取当前组织列表
+ */
+export async function getOrganizationList() {
+  return request(`/api/orginzation/list`);
+}
+
+/**
+ * @description 更新当前用户的申请
+ * @param {*} params {currentView}
+ */
+export async function postApplication(params) {
+  return request(`/api/application`, {
+    method: 'POST',
+    body: params
+  });
+}

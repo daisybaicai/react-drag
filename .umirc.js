@@ -26,6 +26,8 @@ export default {
         { path: '/comsquare', component: '../pages/componentSquare'},
         { path: '/:id/componentDrag', component: '../pages/componentDrag'},
         { path: '/notification', component: '../pages/Notification'},
+        { path: '/orgsquare', component: '../pages/orginzationSquare'},
+        { path: '/letter', component: '../pages/letter'},
       ]
     }
   ],
