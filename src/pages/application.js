@@ -7,6 +7,7 @@ import {
   Icon,
 } from 'antd';
 import { useState, useEffect } from 'react';
+import { APPLICATION_TYPE } from '../common/enum';
 
 const application = props => {
   const {list,loading, dispatch, popLoading} = props;
@@ -33,6 +34,7 @@ const application = props => {
     {
         title: '当前状态',
         dataIndex: 'apply_status',
+        render: text => APPLICATION_TYPE[text]
     },
     {
       title: '操作',
