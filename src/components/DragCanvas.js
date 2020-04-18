@@ -281,7 +281,6 @@ const DragCanvas = props => {
           },
         });
 
-        console.log('itemprops', item);
         return React.createElement(
           Comp,
           MergeProps,

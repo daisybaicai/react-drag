@@ -5,20 +5,15 @@ import ComponentList from '../components/ComponentList';
 import TemplateList from '../components/TemplateList';
 import DragCanvas from '../components/DragCanvas';
 import ComponentConfig from '../components/ComponentConfig';
-import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import {
   SmileTwoTone,
-  TeamOutlined,
-  CheckCircleOutlined,
-  SyncOutlined,
-  HighlightOutlined,
-  AppstoreOutlined,
 } from '@ant-design/icons';
 import { Tabs, Input, Modal, Form } from 'antd';
 import UserMenu from '../components/UserMenu';
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+import ActionMenu from '../components/ActionMenu';
 
 
 const IndexView = props => {
@@ -38,16 +33,9 @@ const IndexView = props => {
     [styles.hidden]: comListHidden === true,
   });
 
-  /**
-   * @description 生成预览代码
-   */
-  const CodePreview = () => {
-    dispatch(routerRedux.push('/codePreview'));
-  };
 
   useEffect(() => {
     // 首次执行
-    console.log('mount----');
     // 发送setcurrentview
     dispatch({
       type: 'drag/getPageCode',
@@ -61,15 +49,6 @@ const IndexView = props => {
     });
   }, []);
 
-  /**
-   * @description 发送到服务器
-   */
-  const postToServer = () => {
-    dispatch({
-      type: 'drag/putPageCode',
-      payload: { code: currentView },
-    });
-  };
 
   const [visible, setVisible] = useState(false);
   /**
@@ -91,7 +70,6 @@ const IndexView = props => {
    * @param {*} e
    */
   const submitForm = e => {
-    // console.log('e', e);
     const {
       form: { validateFields },
     } = props;
@@ -101,7 +79,6 @@ const IndexView = props => {
           orgName: value.orgName,
           orgDescription: value.orgDescription,
         };
-        console.log('payload', payload);
         dispatch({
           type: 'orginzation/createOrginzation',
           payload,
@@ -111,12 +88,6 @@ const IndexView = props => {
     });
   };
 
-  /**
-   * @description 跳转代码广场
-   */
-  const comSquare = () => {
-    dispatch(routerRedux.push('/comsquare'));
-  };
 
   return (
     <div className={styles.container}>
@@ -125,26 +96,7 @@ const IndexView = props => {
           <div className={styles.btnList}>
             <div className={styles.logo}>React-Drag</div>
             <div className={styles.operation}>
-              <div className={styles.btn} style={{ color: '#1890FF' }}>
-                <HighlightOutlined style={{ fontSize: '22px' }} />
-                页面编辑
-              </div>
-              <div className={styles.btn} onClick={comSquare}>
-                <AppstoreOutlined style={{ fontSize: '22px' }} />
-                组件广场
-              </div>
-              <div className={styles.btn} onClick={createOrginzation}>
-                <TeamOutlined style={{ fontSize: '22px' }} />
-                新建组织
-              </div>
-              <div className={styles.btn} onClick={postToServer}>
-                <CheckCircleOutlined style={{ fontSize: '22px' }} />
-                保存到服务器
-              </div>
-              <div className={styles.btn} onClick={CodePreview}>
-                <SyncOutlined style={{ fontSize: '22px' }} />
-                生成代码预览
-              </div>
+              <ActionMenu active="/drag" excludes={[]}/>
             </div>
             <div className={styles.userCenter}>
               <div className={styles.btn}>

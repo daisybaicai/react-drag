@@ -1,0 +1,74 @@
+.content {
+  display: flex;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  height: 100%;
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    width: 40px;
+    z-index: 1;
+    background-color: whitesmoke;
+    border-right: 1px solid rgb(221, 221, 221);
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 44px;
+      border-bottom: 1px solid #ececec;
+    }
+  }
+
+  .editRegion {
+    display: flex;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    width: 0px;
+    margin-left: 0px;
+    transition: all 0.15s ease 0s;
+    padding: 40px;
+
+    .ComponentList {
+      display: flex;
+      flex-direction: column;
+      background-color: whitesmoke;
+      position: relative;
+      width: 300px;
+      height: 100%;
+      border-right: 1px solid rgb(221, 221, 221);
+      &.hidden {
+        display: none;
+        width: -300px;
+      }
+    }
+
+    .dragRegion {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: white;
+    }
+  }
+
+  .RightContainer {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    z-index: 2;
+    background-color: white;
+    overflow: hidden;
+    border-left: 1px solid rgb(221, 221, 221);
+
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: #2C88F8;
+    }
+  }
+}

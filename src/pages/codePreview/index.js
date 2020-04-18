@@ -13,6 +13,7 @@ import {
   SearchBar,
   Result,
 } from 'antd-mobile';
+import styles from './styles.less';
 
 const GlobalComponent = {
   Button,
@@ -232,32 +233,29 @@ const codePreview = props => {
     selectOnLineNumbers: true,
   };
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <MonacoEditor
-        width="800"
-        height="600"
-        language="javascript"
-        theme="vs-dark"
-        value={code}
-        options={options}
-      />
-      <CopyToClipboard
-        text={code}
-        onCopy={() => {
-          message.success('复制成功');
-        }}
-      >
-        <span>复制代码</span>
-      </CopyToClipboard>
-      <div
-        style={{
-          width: '375px',
-          height: '667px',
-          backgroundColor: 'white',
-          margin: '20px',
-        }}
-      >
-        {renderView(currentView, 0)}
+    <div style={{ display: 'flex', flexDirection: 'row', margin: '20px 40px' }}>
+    
+      <div>
+        <CopyToClipboard
+            text={code}
+            onCopy={() => {
+            message.success('复制成功');
+            }}
+            style={{margin: '0 20px', textAlign: 'right'}}
+        >
+            <div>复制代码</div>
+        </CopyToClipboard>
+        <MonacoEditor
+            width="600"
+            height="667"
+            language="javascript"
+            theme="vs-light"
+            value={code}
+            options={options}
+        />
+      </div>
+      <div className={styles.phone}>
+        <div className={styles.container}>{renderView(currentView, 0)}</div>
       </div>
     </div>
   );

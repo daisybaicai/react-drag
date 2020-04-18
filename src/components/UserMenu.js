@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
 import { Dropdown, Menu } from 'antd';
 import { UserOutlined, DownOutlined } from '@ant-design/icons';
 
@@ -10,7 +9,6 @@ const UserMenuDropdown = props => {
     const { dispatch } = props;
 
     if (key === 'logout') {
-
       if (dispatch) {
         dispatch({
           type: 'user/logout',
@@ -19,15 +17,11 @@ const UserMenuDropdown = props => {
 
       return;
     }
-
-    dispatch(routerRedux.push('/notification'));
-
   };
 
   const UserMenu = () => {
     return (
       <Menu onClick={onMenuClick}>
-        <Menu.Item key="1">通知中心</Menu.Item>
         <Menu.Item key="logout">退出登陆</Menu.Item>
       </Menu>
     );
