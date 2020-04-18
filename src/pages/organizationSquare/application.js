@@ -7,7 +7,7 @@ import {
   Icon,
 } from 'antd';
 import { useState, useEffect } from 'react';
-import { APPLICATION_TYPE } from '../common/enum';
+import { APPLICATION_TYPE } from '@/common/enum';
 
 const application = props => {
   const {list,loading, dispatch, popLoading} = props;

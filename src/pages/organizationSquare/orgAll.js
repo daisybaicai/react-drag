@@ -1,7 +1,7 @@
 import { List, Avatar, Icon } from 'antd';
 import { connect } from 'dva';
 import { useEffect } from 'react';
-import { APPLICATION_TYPE } from '../common/enum';
+import { APPLICATION_TYPE } from '@/common/enum';
 
 const OrginzationSquare = props => {
   const { dispatch, orgList } = props;
@@ -43,7 +43,7 @@ const OrginzationSquare = props => {
           itemLayout="vertical"
           size="large"
           pagination={{
-            pageSize: 3,
+            pageSize: 2,
           }}
           dataSource={orgList}
           renderItem={item => (
