@@ -1,4 +1,10 @@
-import { createOrginzation, getOrgArr, getOrganizationList, postApplication } from '../services/api';
+import {
+  createOrginzation,
+  getOrgArr,
+  getOrganizationList,
+  postApplication,
+  getPersonalOrganizationList,
+} from '../services/api';
 import { message } from 'antd';
 
 const orginzationgModel = {
@@ -6,6 +12,7 @@ const orginzationgModel = {
   state: {
     orgArr: [],
     list: [],
+    mylist: [],
   },
   effects: {
     *createOrginzation({ payload }, { call, put }) {
@@ -38,6 +45,17 @@ const orginzationgModel = {
         // message.error(response.msg);
       }
     },
+    *getPersonalOrganizationList(_, { call, put }) {
+      const response = yield call(getPersonalOrganizationList);
+      if (response && response.code == 200) {
+        yield put({
+          type: 'setPersonalOrganizationList',
+          payload: response.data.list,
+        });
+      } else {
+        // message.error(response.msg);
+      }
+    },
     *postApplication({ payload }, { call, put }) {
       const response = yield call(postApplication, payload);
       if (response && response.code == 200) {
@@ -53,6 +71,9 @@ const orginzationgModel = {
     },
     setOrganizationList(state, { payload }) {
       return { ...state, list: payload };
+    },
+    setPersonalOrganizationList(state, { payload }) {
+      return { ...state, mylist: payload };
     },
   },
 };

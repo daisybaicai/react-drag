@@ -15,9 +15,6 @@ export default {
   treeShaking: true,
   publicPath: './',
   routes: [
-    {
-      path: '/',
-      routes: [
         { path: '/', redirect: '/login' },
         { path: '/drag', component: '../pages/DragView'},
         { path: '/codePreview', component: '../pages/codePreview'},
@@ -26,10 +23,12 @@ export default {
         { path: '/comsquare', component: '../pages/componentSquare'},
         { path: '/:id/componentDrag', component: '../pages/componentDrag'},
         { path: '/notification', component: '../pages/Notification'},
-        { path: '/orgsquare', component: '../pages/orginzationSquare'},
+        // { path: '/orgsquare', component: '../pages/orginzationSquare'},
         { path: '/letter', component: '../pages/letter'},
-      ]
-    }
+        {
+          path: '/org',
+          component: '../pages/orgSquare',
+        },
   ],
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

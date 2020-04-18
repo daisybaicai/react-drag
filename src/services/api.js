@@ -132,16 +132,42 @@ export async function putComponentCode(params, id) {
  * @description 获取当前组织列表
  */
 export async function getOrganizationList() {
-  return request(`/api/orginzation/list`);
+  return request(`/api/orginzation/list/all`);
 }
 
 /**
- * @description 更新当前用户的申请
- * @param {*} params {currentView}
+* @description 获取当前个人所在的组织列表
+*/
+export async function getPersonalOrganizationList() {
+ return request(`/api/orginzation/list/personal`);
+}
+
+
+/**
+ * @description 提出当前用户的申请
+ * @param {*} params 
  */
 export async function postApplication(params) {
   return request(`/api/application`, {
     method: 'POST',
+    body: params
+  });
+}
+
+/**
+ * @description 获取当前组织列表
+ */
+export async function getApplicationList() {
+  return request(`/api/application/all`);
+}
+
+/**
+ * @description 回复关于进入组织的申请
+ * @param {*} params
+ */
+export async function replyApplication(params) {
+  return request(`/api/application`, {
+    method: 'PUT',
     body: params
   });
 }
