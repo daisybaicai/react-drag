@@ -47,7 +47,7 @@ service.interceptors.response.use(
       if (err.response.status === 401) {
         // 返回 401 清除token信息并跳转到登录页面
         router.push({
-          pathname: '/user/login',
+          pathname: '/login',
         });
         notification.error({
           message: '请求错误',

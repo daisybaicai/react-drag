@@ -12,13 +12,14 @@ import {
   TeamOutlined,
   CheckCircleOutlined,
   SyncOutlined,
-  UserOutlined,
   HighlightOutlined,
-  AppstoreOutlined
+  AppstoreOutlined,
 } from '@ant-design/icons';
 import { Tabs, Input, Modal, Form } from 'antd';
+import UserMenu from '../components/UserMenu';
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+
 
 const IndexView = props => {
   const { dispatch, currentView, form } = props;
@@ -124,7 +125,7 @@ const IndexView = props => {
           <div className={styles.btnList}>
             <div className={styles.logo}>React-Drag</div>
             <div className={styles.operation}>
-              <div className={styles.btn} style={{color: '#1890FF'}}>
+              <div className={styles.btn} style={{ color: '#1890FF' }}>
                 <HighlightOutlined style={{ fontSize: '22px' }} />
                 页面编辑
               </div>
@@ -146,9 +147,8 @@ const IndexView = props => {
               </div>
             </div>
             <div className={styles.userCenter}>
-              <div className={styles.btn} onClick={CodePreview}>
-                <UserOutlined style={{ fontSize: '22px' }} />
-                用户中心
+              <div className={styles.btn}>
+                <UserMenu />
               </div>
             </div>
           </div>
