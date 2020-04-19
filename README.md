@@ -7,12 +7,14 @@
 - yarn start
 
 ## 效果展示
-
+- 页面拖拽
 ![主页效果](http://q8bn25vr4.bkt.clouddn.com/01-%E6%8B%96%E6%8B%BD%E4%B8%BB%E9%A1%B5.png)
-![登陆](http://q8bn25vr4.bkt.clouddn.com/05-%E7%99%BB%E9%99%86.png)
-![注册](http://q8bn25vr4.bkt.clouddn.com/06-%E6%B3%A8%E5%86%8C.png)
-![组件广场](http://q8bn25vr4.bkt.clouddn.com/06-%E6%B3%A8%E5%86%8C.png)
+- 组件广场
+![组件广场](http://q8bn25vr4.bkt.clouddn.com/02-%E7%BB%84%E4%BB%B6%E5%B9%BF%E5%9C%BA.png)
+- 代码预览
 ![代码预览](http://q8bn25vr4.bkt.clouddn.com/03-%E4%BB%A3%E7%A0%81%E9%A2%84%E8%A7%88.png)
+- 组织广场
+![代码预览](http://q8bn25vr4.bkt.clouddn.com/04-%E7%BB%84%E7%BB%87%E5%B9%BF%E5%9C%BA.png)
 
 
 ## 功能
