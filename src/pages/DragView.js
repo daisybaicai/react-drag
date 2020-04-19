@@ -9,16 +9,14 @@ import { connect } from 'dva';
 import {
   SmileTwoTone,
 } from '@ant-design/icons';
-import { Tabs, Input, Modal, Form } from 'antd';
+import { Tabs } from 'antd';
 import UserMenu from '../components/UserMenu';
 const { TabPane } = Tabs;
-const { TextArea } = Input;
 import ActionMenu from '../components/ActionMenu';
 
 
 const IndexView = props => {
-  const { dispatch, currentView, form } = props;
-  const { getFieldDecorator } = form;
+  const { dispatch } = props;
 
   const [comListHidden, setComListHidden] = useState(false);
 
@@ -48,46 +46,6 @@ const IndexView = props => {
       type: 'drag/getOwnTemplate',
     });
   }, []);
-
-
-  const [visible, setVisible] = useState(false);
-  /**
-   * @description 创建组织,打开弹窗
-   */
-  const createOrginzation = () => {
-    setVisible(true);
-  };
-
-  /**
-   * @description 关闭弹窗
-   */
-  const hideModal = () => {
-    setVisible(false);
-  };
-
-  /**
-   * @description 提交表单
-   * @param {*} e
-   */
-  const submitForm = e => {
-    const {
-      form: { validateFields },
-    } = props;
-    validateFields((err, value) => {
-      if (!err) {
-        let payload = {
-          orgName: value.orgName,
-          orgDescription: value.orgDescription,
-        };
-        dispatch({
-          type: 'orginzation/createOrginzation',
-          payload,
-        });
-        hideModal();
-      }
-    });
-  };
-
 
   return (
     <div className={styles.container}>
@@ -139,34 +97,10 @@ const IndexView = props => {
           MIT Licensed | Copyright © 2019.12.31-present Daisy
         </div>
       </div>
-      <Modal
-        width="50%"
-        title="创建组织"
-        visible={visible}
-        onOk={submitForm}
-        onCancel={hideModal}
-        okText="确认"
-        cancelText="取消"
-      >
-        <div>
-          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
-            <Form.Item label="组织名称">
-              {getFieldDecorator('orgName', {
-                rules: [{ required: true, message: '请输入组件名称' }],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="组织描述">
-              {getFieldDecorator('orgDescription', {
-                rules: [{ required: true, message: '请输入组织描述' }],
-              })(<TextArea />)}
-            </Form.Item>
-          </Form>
-        </div>
-      </Modal>
     </div>
   );
 };
 
 export default connect(({ drag }) => ({
   currentView: drag.currentView,
-}))(Form.create()(IndexView));
+}))(IndexView);
