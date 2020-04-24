@@ -15,15 +15,88 @@ const Router = routerRedux.ConnectedRouter;
 const routes = [
   {
     path: '/',
+    redirect: '/login',
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/drag',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "p__DragView" */ '../DragView'),
+        })
+      : require('../DragView').default,
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/login',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "p__login" */ '../login'),
+        })
+      : require('../login').default,
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/register',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "p__register" */ '../register'),
+        })
+      : require('../register').default,
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/:id/componentDrag',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "p__componentDrag" */ '../componentDrag'),
+        })
+      : require('../componentDrag').default,
+    exact: true,
+    _title: '前端可视化-reactDrag',
+    _title_default: '前端可视化-reactDrag',
+  },
+  {
+    path: '/',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "layout__basicLayout" */ '../../layout/basicLayout'),
+        })
+      : require('../../layout/basicLayout').default,
     routes: [
       {
-        path: '/drag',
+        path: '/org',
         component: __IS_BROWSER
           ? _dvaDynamic({
               component: () =>
-                import(/* webpackChunkName: "p__DragView" */ '../DragView'),
+                import(/* webpackChunkName: "p__organizationSquare__index" */ '../organizationSquare/index'),
             })
-          : require('../DragView').default,
+          : require('../organizationSquare/index').default,
+        exact: true,
+        _title: '前端可视化-reactDrag',
+        _title_default: '前端可视化-reactDrag',
+      },
+      {
+        path: '/comsquare',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              component: () =>
+                import(/* webpackChunkName: "p__componentSquare__index" */ '../componentSquare/index'),
+            })
+          : require('../componentSquare/index').default,
         exact: true,
         _title: '前端可视化-reactDrag',
         _title_default: '前端可视化-reactDrag',
@@ -33,21 +106,9 @@ const routes = [
         component: __IS_BROWSER
           ? _dvaDynamic({
               component: () =>
-                import(/* webpackChunkName: "p__codePreview" */ '../codePreview'),
+                import(/* webpackChunkName: "p__codePreview__index" */ '../codePreview/index'),
             })
-          : require('../codePreview').default,
-        exact: true,
-        _title: '前端可视化-reactDrag',
-        _title_default: '前端可视化-reactDrag',
-      },
-      {
-        path: '/login',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              component: () =>
-                import(/* webpackChunkName: "p__login" */ '../login'),
-            })
-          : require('../login').default,
+          : require('../codePreview/index').default,
         exact: true,
         _title: '前端可视化-reactDrag',
         _title_default: '前端可视化-reactDrag',

@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Input, Select, Button, Modal, Form, Collapse } from 'antd';
+import { Input, Select, Button, Modal, Form, Collapse, Spin } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
+import html2canvas from 'html2canvas';
+import defaultPng from '../assets/components/button.png';
+
 const { Option } = Select;
 const { Panel } = Collapse;
 
 const Config = props => {
   const [visible, setVisible] = useState(false);
   const [showOrginzation, setShowOrginzation] = useState(false);
-  const { config, currentView, dispatch, form, orgArr } = props;
+
+  const { pageConfig,currentPageView,currentComponentView,componentConfig, dispatch, form, orgArr, isPage } = props;
   const { getFieldDecorator } = form;
+
+  const config = isPage ? pageConfig: componentConfig;
+  const currentView = isPage ? currentPageView : currentComponentView;
+
+  const [imgBlob, setImgBlob] = useState(null);
+  const [imgSrc, setImgSrc] = useState(defaultPng);
+  const [imgLoading, setImgLoading] = useState(true);
   /**
    * @description 配置项的渲染组件
    * @param {*} data 该配置项的数据结构
@@ -153,22 +164,25 @@ const Config = props => {
     }
     // setConfig
     dispatch({
-      type: 'drag/saveConfig',
+      type: 'drag/setConfig',
       payload: {
         propsInfo: data,
       },
+      isPage
     });
 
     dragItem.props = data;
+    const oldData = _.cloneDeep(currentView);
     const newdata = itemUpdateInfo(
       arrIndex,
-      _.cloneDeep(currentView),
+      oldData,
       dragItem,
     );
     // setCurrentView
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -192,10 +206,11 @@ const Config = props => {
 
     // setConfig
     dispatch({
-      type: 'drag/saveConfig',
+      type: 'drag/setConfig',
       payload: {
         nodePropsInfo: data,
       },
+      isPage,
     });
 
     // 对应渲染到页面上
@@ -210,6 +225,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -220,8 +236,9 @@ const Config = props => {
     const newdata = itemRemove(config.arrIndex, _.cloneDeep(currentView));
     // 发送请求
     dispatch({
-      type: 'drag/setCurrentView',
+      type: 'drag/removeCurrentView',
       payload: newdata,
+      isPage
     });
   };
 
@@ -238,13 +255,69 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
+      isPage
     });
+  };
+
+  const RenderFunction = (src, width, height, cb) => {
+    const img = new Image();
+    img.src = src;
+    img.width = width;
+    img.height = height;
+    img.crossOrigin = '';
+    cb && cb(img);
+  };
+
+  const Download = (url, name) => {
+    const target = document.createElement('a');
+    target.href = url;
+    target.download = name;
+    const event = document.createEvent('MouseEvents');
+    event.initEvent('click', true, true);
+    target.dispatchEvent(event);
+  };
+
+  var convertBase64UrlToBlob = function(urlData) {
+    var arr = urlData.split(',');
+    var mime = arr[0].match(/:(.*?);/)[1];
+    var bytes = window.atob(urlData.split(',')[1]); //去掉url的头，并转换为byte
+
+    //处理异常,将ascii码小于0的转换为大于0
+    var ab = new ArrayBuffer(bytes.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < bytes.length; i++) {
+      ia[i] = bytes.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mime });
   };
 
   /**
    * @description 生成模版
    */
   const GenerateTemplate = () => {
+    setImgSrc(defaultPng);
+    const dragContainer = document.getElementsByClassName('selectDrag')[0];
+    const opts = {
+      logging: false,
+      scale: 2,
+      useCORS: true,
+    };
+    html2canvas(dragContainer, opts).then(res => {
+      const { height, width } = res;
+      const base64 = res.toDataURL('image/png', 1);
+      RenderFunction(base64, width, height, img => {
+        // document.body.appendChild(img);
+        const blob = convertBase64UrlToBlob(base64);
+        // console.log('blob', blob);
+        setImgBlob(blob);
+        console.log('img', img);
+        if(img) {
+          setImgSrc(img.src);
+          setImgLoading(false);
+        }
+      });
+    });
     setVisible(true);
   };
 
@@ -256,23 +329,39 @@ const Config = props => {
    * @description 提交表单
    * @param {*} e
    */
-  const submitForm = e => {
-    console.log('e', e);
+  const submitForm = () => {
     const {
       form: { validateFields },
     } = props;
-    validateFields((err, value) => {
+    validateFields(async (err, value) => {
       if (!err) {
+        const resfilePath = await UploadFile();
         let payload = {
           ...value,
           comCode: config.dragItem,
+          filePath: resfilePath
         };
-        dispatch({
+        await dispatch({
           type: 'drag/setTemplateList',
           payload,
         });
+        await dispatch({
+          type: 'drag/getOwnTemplate',
+        })
         hideModal();
+        // dispatch({
+        //   type: 'drag/getOwnTemplate'
+        // })
       }
+    });
+  };
+
+  const UploadFile = () => {
+    let formData = new FormData();
+    formData.append('image', imgBlob, 'image.png');
+    return dispatch({
+      type: 'components/uploadFile',
+      payload: formData,
     });
   };
 
@@ -292,14 +381,17 @@ const Config = props => {
       <Button onClick={RemoveComponent} icon="delete" size="small">
         删除组件
       </Button>
-      <Button onClick={GenerateTemplate} icon="edit" size="small">
+      {
+        isPage ? 
+        <Button onClick={GenerateTemplate} icon="edit" size="small">
         生成模版
-      </Button>
-      <Collapse defaultActiveKey={['样式','主题','文字内容']}>
+      </Button> : null
+      }
+      <Collapse defaultActiveKey={['样式', '主题', '文字内容']}>
         {renderConfig(config.propsConfig, 'props')}
         {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
       </Collapse>
-      <Modal
+      { isPage? <Modal
         width="50%"
         title="生成模版"
         visible={visible}
@@ -345,15 +437,35 @@ const Config = props => {
                 </Form.Item>
               </>
             ) : null}
+            <Form.Item label="组件描述">
+              {getFieldDecorator('comDescription', {
+                rules: [{ required: true, message: '请输入组件描述' }],
+              })(<Input />)}
+            </Form.Item>
+            <Form.Item label="图片">
+              <div>
+                <Spin spinning={imgLoading}>
+                  <img
+                    id="myid"
+                    src={imgSrc}
+                    width="300px"
+                    alt="图片模版预览"
+                  />
+                </Spin>
+              </div>
+            </Form.Item>
           </Form>
         </div>
       </Modal>
+      : null}
     </div>
   );
 };
 
 export default connect(({ drag, orginzation }) => ({
-  config: drag.config,
-  currentView: drag.currentView,
+  pageConfig: drag.config,
+  currentPageView: drag.currentView,
   orgArr: orginzation.orgArr,
+  currentComponentView: drag.componentView,
+  componentConfig: drag.componentConfig,
 }))(Form.create()(Config));
