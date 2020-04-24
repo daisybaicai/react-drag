@@ -68,7 +68,7 @@ const SettingModel = {
     *putPageCode({ payload }, { call, put }) {
       const response = yield call(putPageCode, payload);
       if (response) {
-        message.success('res', response);
+        message.success('保存成功'|| response.msg);
       } else {
         message.error(response.msg);
       }
