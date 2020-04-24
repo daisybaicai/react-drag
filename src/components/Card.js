@@ -27,7 +27,7 @@ const card = (props) => {
   }
 
   return (
-    <div style={{ width: '200px', marginRight: '20px' }}>
+    <div style={{ width: '200px', marginRight: '20px', marginBottom: '20px' }}>
       <div className={styles.container}>
         <img style={{ width: '100px' }} src={file_path} />
       </div>

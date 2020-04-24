@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import { connect } from 'dva';
 import _ from 'loadsh';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   Button,
@@ -28,6 +28,7 @@ const GlobalComponent = {
 const codePreview = props => {
   const { dispatch, currentView } = props;
   const [code, setCode] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   /**
    * @description 得到依赖组件
@@ -229,34 +230,71 @@ const codePreview = props => {
     });
   };
 
+  const getZip = () => {
+    setModalVisible(true)
+    let payload = {
+      code: code,
+    };
+    let apiUrl = '/api/page/zip';
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        setModalVisible(false);
+        const filename = `code.zip`;
+        const a = document.createElement('a');
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  };
+
   const options = {
     selectOnLineNumbers: true,
   };
   return (
     <div style={{ display: 'flex', flexDirection: 'row', margin: '20px 40px' }}>
-    
       <div>
-        <CopyToClipboard
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <span onClick={() => getZip()}>生成代码压缩包</span>
+          <CopyToClipboard
             text={code}
             onCopy={() => {
-            message.success('复制成功');
+              message.success('复制成功');
             }}
-            style={{margin: '0 20px', textAlign: 'right'}}
-        >
-            <div>复制代码</div>
-        </CopyToClipboard>
+            style={{ margin: '0 20px', textAlign: 'right' }}
+          >
+            <span>复制代码</span>
+          </CopyToClipboard>
+        </div>
         <MonacoEditor
-            width="600"
-            height="667"
-            language="javascript"
-            theme="vs-light"
-            value={code}
-            options={options}
+          width="600"
+          height="667"
+          language="javascript"
+          theme="vs-light"
+          value={code}
+          options={options}
         />
       </div>
       <div className={styles.phone}>
         <div className={styles.container}>{renderView(currentView, 0)}</div>
       </div>
+
+      <Modal
+        visible={modalVisible}
+        footer={null}
+        closable={false}
+      >
+        <div>
+            正在生成代码压缩包，等待中...
+            <div className={styles.progress}></div>
+        </div>
+      </Modal>
     </div>
   );
 };

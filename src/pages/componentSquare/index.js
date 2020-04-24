@@ -28,21 +28,21 @@ const IndexView = props => {
         <div className={styles.dragRegion}>
           <Tabs>
             <TabPane tab="个人组件" key="1">
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap'}}>
                 {personalList.map(item => {
                   return <MyCard info={item} key={item.id} />;
                 })}
               </div>
             </TabPane>
             <TabPane tab="公共组件" key="2">
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {publicList.map(item => {
                   return <MyCard info={item} key={item.id} />;
                 })}
               </div>
             </TabPane>
             <TabPane tab="组织组件" key="3">
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {orginzationList.map(item => {
                   return <MyCard info={item} key={item.id} />;
                 })}
