@@ -11,3 +11,32 @@
         background-color: white;
     }
 }
+
+.progress {
+    margin-top: .09em;
+    border-left: .16em solid rgba(0, 194, 254, 1);
+    border-right: .16em solid rgba(0, 194, 254, 1);
+    height: 2em;
+    background:rgba(0,194,254,.15);
+    position: relative;
+    overflow: hidden;
+    &::after {
+      position: absolute;
+      display: inline-block;
+      content: "";
+      width: 2em;
+      height: 2em;
+      background: url('../../assets/progress.png');
+      left: 0;
+      top: 0;
+      animation: progress 2.5s linear infinite;
+    }
+  }
+
+  @keyframes progress {
+    from {
+      left: -0.66em;
+    } to {
+      left: 100%;
+    }
+  }

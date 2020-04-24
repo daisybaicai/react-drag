@@ -31,18 +31,21 @@ const login = props => {
   return (
     <>
       <div className={styles.container}>
+        <div className={styles.title}>
+          <h2>react-drag 前端可视化构建平台</h2>
+        </div>
         <div className={styles.logForm}>
           <h2>登陆</h2>
           <div className={styles.form}>
             <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
               <Form.Item label="用户名">
                 {getFieldDecorator('username', {
-                  rules: [{ required: true, message: '请输入username' }],
+                  rules: [{ required: true, message: '请输入用户名' }],
                 })(<Input />)}
               </Form.Item>
               <Form.Item label="密码">
                 {getFieldDecorator('password', {
-                  rules: [{ required: true, message: '请输入password' }],
+                  rules: [{ required: true, message: '请输入密码' }],
                 })(<Input.Password />)}
               </Form.Item>
 
