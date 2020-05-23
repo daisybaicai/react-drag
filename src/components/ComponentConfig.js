@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Input, Select, Button, Modal, Form, Collapse, Spin } from 'antd';
+import { Input, Select, Button, Modal, Form, Collapse, Spin, Switch } from 'antd';
 import _ from 'loadsh';
 import { itemUpdateInfo, itemRemove, itemCopy } from '../utils/utils';
 import Color from './picker';
@@ -14,10 +14,19 @@ const Config = props => {
   const [visible, setVisible] = useState(false);
   const [showOrginzation, setShowOrginzation] = useState(false);
 
-  const { pageConfig,currentPageView,currentComponentView,componentConfig, dispatch, form, orgArr, isPage } = props;
+  const {
+    pageConfig,
+    currentPageView,
+    currentComponentView,
+    componentConfig,
+    dispatch,
+    form,
+    orgArr,
+    isPage,
+  } = props;
   const { getFieldDecorator } = form;
 
-  const config = isPage ? pageConfig: componentConfig;
+  const config = isPage ? pageConfig : componentConfig;
   const currentView = isPage ? currentPageView : currentComponentView;
 
   const [imgBlob, setImgBlob] = useState(null);
@@ -91,6 +100,10 @@ const Config = props => {
       );
     }
     if (type === 'array') {
+      // if(typeof valueInfo !== 'string') {
+      //   valueInfo = '' + valueInfo;
+      // }
+      // console.log('v', valueInfo);
       return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>{title}</span>
@@ -123,6 +136,18 @@ const Config = props => {
           />
         </div>
       );
+    }
+    if (type === 'boolean') {
+      return (<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span>{title}</span>
+        <Switch
+          defaultChecked={valueInfo}
+          style={{ width: '50%' }}
+          onChange={v => {
+            changeValueParent(propsType, v, value);
+          }}
+        />
+      </div>);
     }
     return <div>other</div>;
   };
@@ -168,21 +193,17 @@ const Config = props => {
       payload: {
         propsInfo: data,
       },
-      isPage
+      isPage,
     });
 
     dragItem.props = data;
     const oldData = _.cloneDeep(currentView);
-    const newdata = itemUpdateInfo(
-      arrIndex,
-      oldData,
-      dragItem,
-    );
+    const newdata = itemUpdateInfo(arrIndex, oldData, dragItem);
     // setCurrentView
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
-      isPage
+      isPage,
     });
   };
 
@@ -225,7 +246,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
-      isPage
+      isPage,
     });
   };
 
@@ -238,7 +259,7 @@ const Config = props => {
     dispatch({
       type: 'drag/removeCurrentView',
       payload: newdata,
-      isPage
+      isPage,
     });
   };
 
@@ -255,7 +276,7 @@ const Config = props => {
     dispatch({
       type: 'drag/setCurrentView',
       payload: newdata,
-      isPage
+      isPage,
     });
   };
 
@@ -312,7 +333,7 @@ const Config = props => {
         // console.log('blob', blob);
         setImgBlob(blob);
         console.log('img', img);
-        if(img) {
+        if (img) {
           setImgSrc(img.src);
           setImgLoading(false);
         }
@@ -339,7 +360,7 @@ const Config = props => {
         let payload = {
           ...value,
           comCode: config.dragItem,
-          filePath: resfilePath
+          filePath: resfilePath,
         };
         await dispatch({
           type: 'drag/setTemplateList',
@@ -347,7 +368,7 @@ const Config = props => {
         });
         await dispatch({
           type: 'drag/getOwnTemplate',
-        })
+        });
         hideModal();
         // dispatch({
         //   type: 'drag/getOwnTemplate'
@@ -381,83 +402,83 @@ const Config = props => {
       <Button onClick={RemoveComponent} icon="delete" size="small">
         删除组件
       </Button>
-      {
-        isPage ? 
+      {isPage ? (
         <Button onClick={GenerateTemplate} icon="edit" size="small">
-        生成模版
-      </Button> : null
-      }
+          生成模版
+        </Button>
+      ) : null}
       <Collapse defaultActiveKey={['样式', '主题', '文字内容']}>
         {renderConfig(config.propsConfig, 'props')}
         {renderConfig(config.nodePropsConfig, 'reactNodeProps')}
       </Collapse>
-      { isPage? <Modal
-        width="50%"
-        title="生成模版"
-        visible={visible}
-        onOk={submitForm}
-        onCancel={hideModal}
-        okText="确认"
-        cancelText="取消"
-      >
-        <div>
-          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
-            <Form.Item label="组件名称">
-              {getFieldDecorator('comName', {
-                rules: [{ required: true, message: '请输入组件名称' }],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="组件状态">
-              {getFieldDecorator('comStatus', {
-                rules: [{ required: true, message: '请输入组件状态' }],
-              })(
-                <Select style={{ width: 120 }} onChange={handleChange}>
-                  <Option value="PUBLIC">公开</Option>
-                  <Option value="PERSONAL">个人</Option>
-                  <Option value="ORGINZATION">组织</Option>
-                </Select>,
-              )}
-            </Form.Item>
-            {showOrginzation ? (
-              <>
-                <Form.Item label="所属组织">
-                  {getFieldDecorator('comOrgArr', {
-                    rules: [{ required: true, message: '请选择所属组织' }],
-                  })(
-                    <Select
-                      mode="multiple"
-                      style={{ width: '100%' }}
-                      placeholder="请选择组件所公开属于的组织"
-                    >
-                      {orgArr.map(item => (
-                        <Option key={item}>{item}</Option>
-                      ))}
-                    </Select>,
-                  )}
-                </Form.Item>
-              </>
-            ) : null}
-            <Form.Item label="组件描述">
-              {getFieldDecorator('comDescription', {
-                rules: [{ required: true, message: '请输入组件描述' }],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="图片">
-              <div>
-                <Spin spinning={imgLoading}>
-                  <img
-                    id="myid"
-                    src={imgSrc}
-                    width="300px"
-                    alt="图片模版预览"
-                  />
-                </Spin>
-              </div>
-            </Form.Item>
-          </Form>
-        </div>
-      </Modal>
-      : null}
+      {isPage ? (
+        <Modal
+          width="50%"
+          title="生成模版"
+          visible={visible}
+          onOk={submitForm}
+          onCancel={hideModal}
+          okText="确认"
+          cancelText="取消"
+        >
+          <div>
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 14 }}>
+              <Form.Item label="组件名称">
+                {getFieldDecorator('comName', {
+                  rules: [{ required: true, message: '请输入组件名称' }],
+                })(<Input />)}
+              </Form.Item>
+              <Form.Item label="组件状态">
+                {getFieldDecorator('comStatus', {
+                  rules: [{ required: true, message: '请输入组件状态' }],
+                })(
+                  <Select style={{ width: 120 }} onChange={handleChange}>
+                    <Option value="PUBLIC">公开</Option>
+                    <Option value="PERSONAL">个人</Option>
+                    <Option value="ORGINZATION">组织</Option>
+                  </Select>,
+                )}
+              </Form.Item>
+              {showOrginzation ? (
+                <>
+                  <Form.Item label="所属组织">
+                    {getFieldDecorator('comOrgArr', {
+                      rules: [{ required: true, message: '请选择所属组织' }],
+                    })(
+                      <Select
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="请选择组件所公开属于的组织"
+                      >
+                        {orgArr.map(item => (
+                          <Option key={item}>{item}</Option>
+                        ))}
+                      </Select>,
+                    )}
+                  </Form.Item>
+                </>
+              ) : null}
+              <Form.Item label="组件描述">
+                {getFieldDecorator('comDescription', {
+                  rules: [{ required: true, message: '请输入组件描述' }],
+                })(<Input />)}
+              </Form.Item>
+              <Form.Item label="图片">
+                <div>
+                  <Spin spinning={imgLoading}>
+                    <img
+                      id="myid"
+                      src={imgSrc}
+                      width="300px"
+                      alt="图片模版预览"
+                    />
+                  </Spin>
+                </div>
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
+      ) : null}
     </div>
   );
 };
