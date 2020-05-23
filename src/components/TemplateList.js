@@ -25,14 +25,14 @@ const TemplateList = props => {
   const renderComponent = data => {
     return data.map(item => {
       return (
-        <>
-          <div style={{ fontSize: '14px', fontWeight: '700', color: '#595959' }} key={_.uniqueId()}>
+        <React.Fragment key={item.file_path}>
+        <div style={{ fontSize: '14px', fontWeight: '700', color: '#595959' }} key={_.uniqueId()}>
             {item.com_name}
           </div>
           <span data-id={`com-${item.com_name}`} key={_.uniqueId()} className="item" style={{ border: '1px dashed #b9b9b9', marginBottom: '4px', cursor: 'move', padding: '4px', display: 'inline-block'}}>
             <img src={item.file_path} width="200px"/>
           </span>
-        </>
+        </React.Fragment>
       );
     });
   };
