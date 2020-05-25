@@ -58,17 +58,6 @@ const GlobalComponent = {
   Result,
 };
 
-const renderReactDom = ({antd, componentName, props}) => {
-  if(antd) {
-    const Comp = GlobalComponent[componentName];
-    return (
-      React.createElement(
-        Comp,
-        props
-      )
-    )
-  }
-}
 
 const DragCanvas = props => {
   const { dispatch, currentPageView, pageSelectIndex, templateList, isPage, currentComponentView,componentSelectIndex } = props;
@@ -252,11 +241,9 @@ const DragCanvas = props => {
       if (item.nodeProps) {
         const nodeProps = item.nodeProps;
         for (const key in nodeProps) {
-          var func = eval('('+nodeProps[key].renderFunc+')');
+          const func = nodeProps[key].renderFunc;
           const params = nodeProps[key].params;
-          const reactDomParmas = func(params);
-          const domContent = renderReactDom(reactDomParmas);
-          ReactNodeProps[key] = domContent;
+          ReactNodeProps[key] = func(params);
         }
       }
       let props = {

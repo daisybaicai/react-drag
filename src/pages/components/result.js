@@ -1,3 +1,4 @@
+import { Icon } from 'antd-mobile'
 export default {
 	type: 'Result',
 	title: "结果页面",
@@ -10,7 +11,14 @@ export default {
     },
     nodeProps: {
         img: {
-            renderFunc: "({icon, color}) => {return {antd: true,componentName: `Icon`, props: {type: icon,style: {fill: color},className: `spe`,size: `lg`}}}",
+            renderFunc: ({icon, color}) => {
+                return (
+                      <Icon type={icon} className="spe" size="lg" style={{ fill: color }} />
+                  )
+            },
+            renderString: ({icon, color}) => {
+                return `<Icon type={${icon}} className="spe" size="lg" style={{ fill: ${color} }} />`
+            },
             params: {
                 icon: 'check-circle',
                 color: '#1F90E6',
