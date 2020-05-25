@@ -80,7 +80,7 @@ const codePreview = props => {
   const renderJSONtoJSX = () => {
     const arr = dependComponents();
     const dependCom =
-      arr.length > 0 ? `import { Icon, ${arr.join(', ')} } from 'antd-mobile';` : '';
+      arr.length > 0 ? `import { ${arr.join(', ')} } from 'antd-mobile';` : '';
     return `
     import React, { Component } from 'react';
     ${dependCom}
