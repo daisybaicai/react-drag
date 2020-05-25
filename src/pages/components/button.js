@@ -46,16 +46,34 @@ export default {
                         value: 'small'
                     }
                 ]
-            },
-            {
-                type: 'boolean',
+            },{
+                type: 'array',
                 text: '是否禁用',
                 field: 'disabled',
-            },
-            {
-                type: 'boolean',
+                data: [
+                    {
+                        text: '是',
+                        value: 'true'
+                    },
+                    {
+                        text: '否',
+                        value: false
+                    }
+                ]
+            },{
+                type: 'array',
                 text: '行内元素',
                 field: 'inline',
+                data: [
+                    {
+                        text: '是',
+                        value: 'true'
+                    },
+                    {
+                        text: '否',
+                        value: false
+                    }
+                ]
             },{
                 type: 'array',
                 text: 'icon',

@@ -29,17 +29,31 @@ export default {
 					{text: "密码输入", value: "password"},
 					{text: "number数值输入", value: "number"},
 				]
-			},
-			{
-                type: 'boolean',
+			},{
+                type: 'array',
                 text: '是否禁用',
                 field: 'disabled',
-			},
-			{
-                type: 'boolean',
+                data: [{
+					text: '是',
+					value: true
+				},
+				{
+					text: '否',
+					value: false
+				}]
+            },{
+				type: 'array',
                 text: '是否可清除',
                 field: 'clear',
-            }]
+                data: [{
+					text: '是',
+					value: true
+				},
+				{
+					text: '否',
+					value: false
+				}]
+			}]
 		}
 	],
 }
