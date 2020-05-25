@@ -90,7 +90,6 @@ const ActionMenu = props => {
             className={styles.btn}
             style={{ color: item.url === active ? '#1890FF' : '' }}
             onClick={() => handleClick(item)}
-            key={item.title}
           >
             <Icon type={item.icon} style={{ fontSize: '22px' }} />
             {item.title}
