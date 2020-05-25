@@ -11,7 +11,6 @@ export default {
     nodeProps: {
         img: {
             renderFunc: "({icon, color}) => {return {antd: true,componentName: `Icon`, props: {type: icon,style: {fill: color},className: `spe`,size: `lg`}}}",
-            renderString: "<Icon type='%icon%' className='spe' size='lg' style={{ fill: '%color%' }} />",
             params: {
                 icon: 'check-circle',
                 color: '#1F90E6',

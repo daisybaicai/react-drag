@@ -13,7 +13,6 @@ import {
   SearchBar,
   Result,
 } from 'antd-mobile';
-import {renderPropsToString} from '@/utils/utils';
 import styles from './styles.less';
 
 const GlobalComponent = {
@@ -30,20 +29,6 @@ const codePreview = props => {
   const { dispatch, currentView } = props;
   const [code, setCode] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  console.log('c', currentView);
-
-  const renderReactDom = ({antd, componentName, props}) => {
-    if(antd) {
-      const Comp = GlobalComponent[componentName];
-      return (
-        React.createElement(
-          Comp,
-          props
-        )
-      )
-    }
-  }
 
   /**
    * @description 得到依赖组件
@@ -161,9 +146,7 @@ const codePreview = props => {
     for (const key in props) {
       if (props.hasOwnProperty(key)) {
         const value = props[key];
-        const template = value.renderString;
-        const params = value.params;
-        nodePropsResult += `${key}={${renderPropsToString(template, params)}}`;
+        nodePropsResult += `${key}={${value.renderString(value.params)}}`;
       }
     }
     return nodePropsResult;
@@ -216,11 +199,9 @@ const codePreview = props => {
       if (item.nodeProps) {
         const nodeProps = item.nodeProps;
         for (const key in nodeProps) {
-          var func = eval('('+nodeProps[key].renderFunc+')');
+          const func = nodeProps[key].renderFunc;
           const params = nodeProps[key].params;
-          const reactDomParmas = func(params);
-          const domContent = renderReactDom(reactDomParmas);
-          ReactNodeProps[key] = domContent;
+          ReactNodeProps[key] = func(params);
         }
       }
       let props = {

@@ -201,17 +201,3 @@ export const findTempCode = (list, name) => {
   const currentArr = _.find(list, { 'com_name': name});
   return JSON.parse(currentArr.com_code);
 }
-
-/**
- * @description 生成reactDom类型的代码
- * @param {*} template 
- * @param {*} params 
- */
-export const renderPropsToString = (template, params) => {
-  let res = template;
-  console.log('typeof', typeof res);
-  Object.keys(params).forEach((key) => {
-    res = res.replace(`%${key}%`, params[key])
-  })
-  return res;
-}
