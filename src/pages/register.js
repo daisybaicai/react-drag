@@ -23,6 +23,7 @@ const login = props => {
           type: 'user/register',
           payload,
         });
+        console.log('values', values);
       }
     });
   };
@@ -39,17 +40,17 @@ const login = props => {
             <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
               <Form.Item label="用户名">
                 {getFieldDecorator('username', {
-                  rules: [{ required: true, message: '请输入用户名' }],
+                  rules: [{ required: true, message: '请输入username' }],
                 })(<Input />)}
               </Form.Item>
               <Form.Item label="密码">
                 {getFieldDecorator('password', {
-                  rules: [{ required: true, message: '请输入密码' }],
+                  rules: [{ required: true, message: '请输入password' }],
                 })(<Input.Password />)}
               </Form.Item>
               <Form.Item label="再次输入密码">
                 {getFieldDecorator('repassword', {
-                  rules: [{ required: true, message: '请输入二次确认密码' }],
+                  rules: [{ required: true, message: '请输入password' }],
                 })(<Input.Password />)}
               </Form.Item>
 
