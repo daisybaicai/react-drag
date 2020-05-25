@@ -86,7 +86,7 @@ const DragCanvas = props => {
   };
 
   const onAddItem = evt => {
-    const startIndex = evt.newIndex;
+    const startIndex = evt.newDraggableIndex;
     const comNameOrPath = evt.clone.dataset.id; // (1)得到拖拽元素或者路径
     const parentPath = evt.path[1].getAttribute('data-id');
     const newIndex = parentPath ? `${parentPath}-${startIndex}` : startIndex;
