@@ -286,7 +286,10 @@ const Config = props => {
     img.width = width;
     img.height = height;
     img.crossOrigin = '';
-    cb && cb(img);
+    // 保证图片加载完毕以后再返回
+    img.onload = () => {
+      cb && cb(img);
+    }
   };
 
   const Download = (url, name) => {
@@ -334,6 +337,7 @@ const Config = props => {
         setImgBlob(blob);
         console.log('img', img);
         if (img) {
+          // setImgSrc(img.src);
           setImgSrc(img.src);
           setImgLoading(false);
         }
@@ -464,7 +468,7 @@ const Config = props => {
                 })(<Input />)}
               </Form.Item>
               <Form.Item label="图片">
-                <div>
+                <div style={{width: '300px'}}>
                   <Spin spinning={imgLoading}>
                     <img
                       id="myid"
