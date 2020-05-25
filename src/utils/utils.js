@@ -208,7 +208,8 @@ export const findTempCode = (list, name) => {
  * @param {*} params 
  */
 export const renderPropsToString = (template, params) => {
-  let res = template.replace(/`/g,'"');
+  let res = template;
+  console.log('typeof', typeof res);
   Object.keys(params).forEach((key) => {
     res = res.replace(`%${key}%`, params[key])
   })

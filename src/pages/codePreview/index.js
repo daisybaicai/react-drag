@@ -31,6 +31,8 @@ const codePreview = props => {
   const [code, setCode] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+  console.log('c', currentView);
+
   const renderReactDom = ({antd, componentName, props}) => {
     if(antd) {
       const Comp = GlobalComponent[componentName];
