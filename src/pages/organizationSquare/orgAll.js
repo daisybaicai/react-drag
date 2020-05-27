@@ -22,6 +22,10 @@ const OrginzationSquare = props => {
         to_id: item.user_id,
         apply_status: 'PENDING',
       },
+    }).then((res) => {
+      dispatch({
+        type: 'orginzation/getOrganizationList',
+      });
     });
   };
 

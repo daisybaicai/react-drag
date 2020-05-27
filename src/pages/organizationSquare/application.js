@@ -113,7 +113,7 @@ const application = props => {
       },
     })
       .then(data => {
-        message.success(data);
+        message.success('处理成功');
         handlePop(null, false, 'ok');
         getList();
       })
