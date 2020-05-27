@@ -58,6 +58,11 @@ const OrginzationSquare = props => {
         dispatch({
           type: 'orginzation/createOrginzation',
           payload,
+        }).then((res) => {
+          // 完成后重新请求列表
+          dispatch({
+            type: 'orginzation/getPersonalOrganizationList',
+          });
         });
         hideModal();
       }

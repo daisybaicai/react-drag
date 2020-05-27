@@ -59,7 +59,7 @@ const orginzationgModel = {
     *postApplication({ payload }, { call, put }) {
       const response = yield call(postApplication, payload);
       if (response && response.code == 200) {
-        message.success(response.msg);
+        message.success('已发送申请' || response.msg);
       } else {
         message.error(response.msg);
       }
